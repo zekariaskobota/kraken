@@ -1,4 +1,4 @@
-export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://api-kraken-3y6c.onrender.com';
 
 // Google OAuth Configuration
 export const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '592543508035-3ncna0c2a98bot0i8vjiudas527rm3u2.apps.googleusercontent.com';
