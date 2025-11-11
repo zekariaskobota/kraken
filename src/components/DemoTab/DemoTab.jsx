@@ -18,9 +18,9 @@ const DemoTab = () => {
       case 'Crypto':
         return <Demo/>;
       case 'Forex':
-        return <ForexTrading/>;
+        return <ForexTrading isDemo={true} />;
       case 'Gold':
-        return <GoldTradingPage/>;
+        return <GoldTradingPage isDemo={true} />;
       default:
         return null;
     }

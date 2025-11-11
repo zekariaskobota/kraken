@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import config from "../../config";
-import Swal from 'sweetalert2';
 import { FaEnvelope, FaLock, FaArrowLeft } from "react-icons/fa";
+import { showToast } from "../../utils/toast";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -30,32 +30,16 @@ const ForgotPassword = () => {
 
       const data = await response.json();
       if (response.ok) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Password Reset Successful',
-          text: 'You can now log in with your new password.',
-          confirmButtonColor: '#26a69a',
-        }).then((result) => {
-          if (result.isConfirmed) {
-            navigate('/login');
-          }
-        });
+        showToast.success("Password reset successful! You can now log in with your new password.");
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
       } else {
-        Swal.fire({
-          icon: 'info',
-          title: 'Information',
-          text: data.message,
-          confirmButtonColor: '#26a69a',
-        });
+        showToast.info(data.message);
       }
     } catch (error) {
       console.error("Error:", error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Password Reset Failed',
-        text: 'Failed to reset password. Please try again.',
-        confirmButtonColor: '#ef4444',
-      });
+      showToast.error("Failed to reset password. Please try again");
     } finally {
       setLoading(false);
     }

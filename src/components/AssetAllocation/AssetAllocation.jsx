@@ -96,7 +96,7 @@ const AssetAllocation = () => {
 
   if (loading) {
     return (
-      <div className="bg-gradient-to-br from-[rgba(26,29,41,0.8)] to-[rgba(11,14,20,0.6)] border border-[#2a2d3a] rounded-2xl p-4 sm:p-6">
+      <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-4 sm:p-6">
         <div className="animate-pulse">
           <div className="h-6 bg-slate-700/50 rounded w-1/3 mb-4"></div>
           <div className="h-32 bg-slate-700/50 rounded mb-4"></div>
@@ -111,7 +111,7 @@ const AssetAllocation = () => {
   }
 
   return (
-    <div className="bg-gradient-to-br from-[rgba(26,29,41,0.8)] to-[rgba(11,14,20,0.6)] border border-[#2a2d3a] rounded-2xl p-4 sm:p-6 shadow-xl">
+    <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-4 sm:p-6 shadow-xl">
       <div className="flex items-center gap-2 mb-4">
         <FaChartPie className="text-teal-400 text-lg" />
         <h3 className="text-base sm:text-lg font-semibold text-white">Asset Allocation</h3>
@@ -177,7 +177,7 @@ const AssetAllocation = () => {
             {allocations.map((item, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between p-2 bg-[rgba(11,14,20,0.6)] rounded-lg border border-[#2a2d3a]"
+                className="flex items-center justify-between p-2 bg-gray-900/50 rounded-lg border border-gray-700"
               >
                 <div className="flex items-center gap-2 flex-1">
                   <div className={`w-6 h-6 rounded-full bg-gradient-to-br ${getColor(index)} flex items-center justify-center text-white text-xs`}>

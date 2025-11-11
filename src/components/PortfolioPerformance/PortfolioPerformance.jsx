@@ -83,7 +83,7 @@ const PortfolioPerformance = () => {
 
   if (loading) {
     return (
-      <div className="bg-gradient-to-br from-[rgba(26,29,41,0.8)] to-[rgba(11,14,20,0.6)] border border-[#2a2d3a] rounded-2xl p-6">
+      <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-6">
         <div className="animate-pulse space-y-4">
           <div className="h-6 bg-slate-700/50 rounded w-1/3"></div>
           <div className="h-12 bg-slate-700/50 rounded"></div>
@@ -98,7 +98,7 @@ const PortfolioPerformance = () => {
   }
 
   return (
-    <div className="bg-gradient-to-br from-[rgba(26,29,41,0.8)] to-[rgba(11,14,20,0.6)] border border-[#2a2d3a] rounded-2xl p-4 sm:p-6 shadow-xl">
+    <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-4 sm:p-6 shadow-xl">
       <div className="flex items-center gap-2 mb-4">
         <FaChartLine className="text-teal-400 text-lg" />
         <h3 className="text-base sm:text-lg font-semibold text-white">Portfolio Performance</h3>
@@ -107,7 +107,7 @@ const PortfolioPerformance = () => {
       {/* Total Profit/Loss */}
       <div className="mb-6">
         <div className="text-xs text-gray-400 mb-1">Total P&L</div>
-        <div className={`text-2xl sm:text-3xl font-bold ${stats.totalProfit >= 0 ? "text-green-400" : "text-red-400"}`}>
+        <div className={`text-2xl sm:text-3xl font-bold ${stats.totalProfit >= 0 ? "text-teal-400" : "text-gray-400"}`}>
           {formatCurrency(stats.totalProfit)}
         </div>
         <div className="text-xs text-gray-500 mt-1">
@@ -117,23 +117,23 @@ const PortfolioPerformance = () => {
 
       {/* Time Period Stats */}
       <div className="grid grid-cols-3 gap-3 mb-4">
-        <div className="bg-[rgba(11,14,20,0.6)] rounded-lg p-3 border border-[#2a2d3a]">
+        <div className="bg-gray-900/50 rounded-lg p-3 border border-gray-700">
           <div className="text-xs text-gray-400 mb-1">24h</div>
-          <div className={`text-sm font-semibold flex items-center gap-1 ${stats.profit24h >= 0 ? "text-green-400" : "text-red-400"}`}>
+          <div className={`text-sm font-semibold flex items-center gap-1 ${stats.profit24h >= 0 ? "text-teal-400" : "text-gray-400"}`}>
             {stats.profit24h >= 0 ? <FaArrowUp className="text-xs" /> : <FaArrowDown className="text-xs" />}
             {formatCurrency(Math.abs(stats.profit24h))}
           </div>
         </div>
-        <div className="bg-[rgba(11,14,20,0.6)] rounded-lg p-3 border border-[#2a2d3a]">
+        <div className="bg-gray-900/50 rounded-lg p-3 border border-gray-700">
           <div className="text-xs text-gray-400 mb-1">7d</div>
-          <div className={`text-sm font-semibold flex items-center gap-1 ${stats.profit7d >= 0 ? "text-green-400" : "text-red-400"}`}>
+          <div className={`text-sm font-semibold flex items-center gap-1 ${stats.profit7d >= 0 ? "text-teal-400" : "text-gray-400"}`}>
             {stats.profit7d >= 0 ? <FaArrowUp className="text-xs" /> : <FaArrowDown className="text-xs" />}
             {formatCurrency(Math.abs(stats.profit7d))}
           </div>
         </div>
-        <div className="bg-[rgba(11,14,20,0.6)] rounded-lg p-3 border border-[#2a2d3a]">
+        <div className="bg-gray-900/50 rounded-lg p-3 border border-gray-700">
           <div className="text-xs text-gray-400 mb-1">30d</div>
-          <div className={`text-sm font-semibold flex items-center gap-1 ${stats.profit30d >= 0 ? "text-green-400" : "text-red-400"}`}>
+          <div className={`text-sm font-semibold flex items-center gap-1 ${stats.profit30d >= 0 ? "text-teal-400" : "text-gray-400"}`}>
             {stats.profit30d >= 0 ? <FaArrowUp className="text-xs" /> : <FaArrowDown className="text-xs" />}
             {formatCurrency(Math.abs(stats.profit30d))}
           </div>
@@ -141,17 +141,17 @@ const PortfolioPerformance = () => {
       </div>
 
       {/* Win Rate */}
-      <div className="bg-[rgba(11,14,20,0.6)] rounded-lg p-3 border border-[#2a2d3a]">
+      <div className="bg-gray-900/50 rounded-lg p-3 border border-gray-700">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
-            <FaTrophy className="text-yellow-400 text-sm" />
+            <FaTrophy className="text-teal-400 text-sm" />
             <span className="text-xs text-gray-400">Win Rate</span>
           </div>
           <span className="text-sm font-semibold text-white">{stats.winRate}%</span>
         </div>
-        <div className="w-full bg-slate-700/50 rounded-full h-2">
+        <div className="w-full bg-gray-700/50 rounded-full h-2">
           <div
-            className="bg-gradient-to-r from-teal-400 to-cyan-400 h-2 rounded-full transition-all duration-500"
+            className="bg-teal-500 h-2 rounded-full transition-all duration-500"
             style={{ width: `${Math.min(stats.winRate, 100)}%` }}
           ></div>
         </div>

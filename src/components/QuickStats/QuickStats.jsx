@@ -71,7 +71,7 @@ const QuickStats = () => {
     return (
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="bg-gradient-to-br from-[rgba(26,29,41,0.8)] to-[rgba(11,14,20,0.6)] border border-[#2a2d3a] rounded-xl p-4">
+          <div key={i} className="bg-gray-800/50 border border-gray-700 rounded-xl p-4">
             <div className="animate-pulse">
               <div className="h-4 bg-slate-700/50 rounded w-2/3 mb-2"></div>
               <div className="h-6 bg-slate-700/50 rounded"></div>
@@ -84,32 +84,32 @@ const QuickStats = () => {
 
   const statCards = [
     {
-      icon: <FaArrowDown className="text-green-400" />,
+      icon: <FaArrowDown className="text-teal-400" />,
       label: "Total Deposits",
       value: formatCurrency(stats.totalDeposits),
-      color: "text-green-400",
-      bg: "from-green-500/10 to-emerald-500/5",
+      color: "text-teal-400",
+      bg: "bg-gray-700/50",
     },
     {
-      icon: <FaArrowUp className="text-red-400" />,
+      icon: <FaArrowUp className="text-gray-400" />,
       label: "Total Withdrawals",
       value: formatCurrency(stats.totalWithdrawals),
-      color: "text-red-400",
-      bg: "from-red-500/10 to-orange-500/5",
+      color: "text-gray-400",
+      bg: "bg-gray-700/50",
     },
     {
-      icon: <FaChartBar className="text-blue-400" />,
+      icon: <FaChartBar className="text-teal-400" />,
       label: "Trading Volume",
       value: formatCurrency(stats.tradingVolume),
-      color: "text-blue-400",
-      bg: "from-blue-500/10 to-cyan-500/5",
+      color: "text-teal-400",
+      bg: "bg-gray-700/50",
     },
     {
-      icon: <FaDollarSign className="text-purple-400" />,
+      icon: <FaDollarSign className="text-teal-400" />,
       label: "ROI",
       value: `${stats.roi >= 0 ? "+" : ""}${stats.roi}%`,
-      color: stats.roi >= 0 ? "text-green-400" : "text-red-400",
-      bg: stats.roi >= 0 ? "from-green-500/10 to-emerald-500/5" : "from-red-500/10 to-orange-500/5",
+      color: stats.roi >= 0 ? "text-teal-400" : "text-gray-400",
+      bg: "bg-gray-700/50",
     },
   ];
 
@@ -118,9 +118,9 @@ const QuickStats = () => {
       {statCards.map((stat, index) => (
         <div
           key={index}
-          className="bg-gradient-to-br from-[rgba(26,29,41,0.8)] to-[rgba(11,14,20,0.6)] border border-[#2a2d3a] rounded-xl p-3 sm:p-4 hover:border-teal-500/50 transition-all duration-300"
+          className="bg-gray-800/50 border border-gray-700 rounded-xl p-3 sm:p-4 hover:border-teal-500/50 transition-all duration-300"
         >
-          <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${stat.bg} flex items-center justify-center mb-2`}>
+          <div className={`w-8 h-8 rounded-lg ${stat.bg} flex items-center justify-center mb-2`}>
             {stat.icon}
           </div>
           <div className="text-xs text-gray-400 mb-1">{stat.label}</div>

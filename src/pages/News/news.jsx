@@ -3,7 +3,7 @@ import Navbar from '../../components/Navbar/Navbar';
 import BottomNavigation from '../../components/BottomNavigation/BottomNavigation';
 import config from '../../config';
 import { useNavigate } from "react-router-dom";
-import Swal from 'sweetalert2';
+import { showToast } from '../../utils/toast';
 import { FaCalendarAlt, FaExternalLinkAlt } from 'react-icons/fa';
 
 const CryptoNews = () => {
@@ -14,14 +14,8 @@ const CryptoNews = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Session Expired',
-        text: 'Your login session expired, You need to log in again',
-        confirmButtonColor: '#22c55e',
-      }).then(() => {
-        navigate("/login");
-      });
+      showToast.error("Your login session expired. Please log in again");
+      navigate("/login");
     }
   }, [navigate]);
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import { showToast } from '../../utils/toast';
 import ModernTradingChart from './ModernTradingChart';
 import OrderBook from './OrderBook';
 import RecentTrades from './RecentTrades';
@@ -23,14 +23,8 @@ const ModernTradingPageContent = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Session Expired',
-        text: 'Your login session expired. Please log in again.',
-        confirmButtonColor: '#22c55e',
-      }).then(() => {
-        navigate('/login');
-      });
+      showToast.error("Your login session expired. Please log in again");
+      navigate('/login');
       return;
     }
 

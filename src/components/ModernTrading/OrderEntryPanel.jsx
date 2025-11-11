@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import Swal from 'sweetalert2';
+import { showToast } from '../../utils/toast';
 import { BACKEND_URL } from '../../services/apiConfig';
 import TradePopup from '../TradePopup/TradePopup';
 
@@ -92,71 +92,34 @@ const OrderEntryPanel = ({ symbol, currentPrice, balance, user, defaultSide }) =
 
   const handleSubmitOrder = async () => {
     if (!user || user.status !== 'Verified') {
-      Swal.fire({
-        icon: 'error',
-        title: 'Identity Verification Required',
-        text: 'Please verify your identity to place orders.',
-        confirmButtonColor: '#3085d6',
-      });
+      showToast.error("Please verify your identity to place orders");
       return;
     }
 
     if (!quantity || parseFloat(quantity) <= 0) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Quantity',
-        text: 'Please enter a valid quantity.',
-        toast: true,
-        position: 'top',
-        timer: 3000,
-      });
+      showToast.error("Please enter a valid quantity");
       return;
     }
 
     if (orderType === 'limit' && (!price || parseFloat(price) <= 0)) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Price',
-        text: 'Please enter a valid limit price.',
-        toast: true,
-        position: 'top',
-        timer: 3000,
-      });
+      showToast.error("Please enter a valid limit price");
       return;
     }
 
     if ((orderType === 'stop' || orderType === 'stopLimit') && (!stopPrice || parseFloat(stopPrice) <= 0)) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Stop Price',
-        text: 'Please enter a valid stop price.',
-        toast: true,
-        position: 'top',
-        timer: 3000,
-      });
+      showToast.error("Please enter a valid stop price");
       return;
     }
 
     if (side === 'buy' && estimatedTotal > balance) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Insufficient Balance',
-        text: `You need ${estimatedTotal.toFixed(2)} USDT but only have ${balance.toFixed(2)} USDT.`,
-        toast: true,
-        position: 'top',
-        timer: 3000,
-      });
+      showToast.error(`You need ${estimatedTotal.toFixed(2)} USDT but only have ${balance.toFixed(2)} USDT`);
       return;
     }
 
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Authentication Required',
-          text: 'Please log in to place orders.',
-        });
+        showToast.error("Please log in to place orders");
         return;
       }
 
@@ -182,14 +145,7 @@ const OrderEntryPanel = ({ symbol, currentPrice, balance, user, defaultSide }) =
       });
 
       if (response.ok) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Order Placed',
-          text: `${side === 'buy' ? 'Buy' : 'Sell'} order placed successfully!`,
-          toast: true,
-          position: 'top',
-          timer: 3000,
-        });
+        showToast.success(`${side === 'buy' ? 'Buy' : 'Sell'} order placed successfully!`);
 
         // Reset form
         setQuantity('');
@@ -198,25 +154,11 @@ const OrderEntryPanel = ({ symbol, currentPrice, balance, user, defaultSide }) =
         setPercentage(0);
       } else {
         const error = await response.json();
-        Swal.fire({
-          icon: 'error',
-          title: 'Order Failed',
-          text: error.message || 'Failed to place order. Please try again.',
-          toast: true,
-          position: 'top',
-          timer: 3000,
-        });
+        showToast.error(error.message || "Failed to place order. Please try again");
       }
     } catch (error) {
       console.error('Error placing order:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'An error occurred while placing the order.',
-        toast: true,
-        position: 'top',
-        timer: 3000,
-      });
+      showToast.error("An error occurred while placing the order");
     }
   };
 

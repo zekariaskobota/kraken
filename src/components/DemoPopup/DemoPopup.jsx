@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
+import { FaTimes, FaWallet, FaChartLine } from "react-icons/fa";
 import config from "../../config";
-import Swal from "sweetalert2";
+import showToast from "../../utils/toast";
 
 const DemoPopup = ({ cryptoData, isOpen, onClose, tradeType }) => {
   const navigate = useNavigate();
@@ -73,13 +74,14 @@ const DemoPopup = ({ cryptoData, isOpen, onClose, tradeType }) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          setBalance(data.balance);
+          // For DEMO mode, use demoBalance not real balance
+          setBalance(data.demoBalance || 0);
           setUserId(decoded.id);
           setUserWinLose(data.winLose);
           setUserIdentityStatus(data.status);
         })
         .catch((error) => {
-          // Error handling without console.log
+          // Error handling
         });
     }
   }, []);
@@ -111,34 +113,14 @@ const DemoPopup = ({ cryptoData, isOpen, onClose, tradeType }) => {
   const submitTrade = async () => {
     if (userIdentityStatus !== "Verified") {
       resetTradeState();
-
-      Swal.fire({
-        icon: "error",
-        title: "Action Required",
-        text: "Please verify your identity to trade!",
-        confirmButtonText: "OK",
-        confirmButtonColor: "#3085d6",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate("/real-name-authentication");
-        }
-      });
-
+      showToast.error("Please verify your identity to trade!");
+      setTimeout(() => navigate("/real-name-authentication"), 1500);
       return;
     }
+    
     // Check for sufficient balance
     if (tradeAmount > balance) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Insufficient balance',
-        text: 'Please deposit to trade!',
-        toast: true,
-        position: 'top',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-      });
-
+      showToast.error("Insufficient balance. Please deposit to trade!");
       resetTradeState();
       return;
     }
@@ -148,52 +130,24 @@ const DemoPopup = ({ cryptoData, isOpen, onClose, tradeType }) => {
     );
 
     if (!selectedExpiration) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid expiration option selected.',
-        toast: true,
-        position: 'top',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-      });
+      showToast.error("Invalid expiration option selected");
       return;
     }
 
     if (tradeAmount < selectedExpiration.minTradeAmount) {
-      Swal.fire({
-        icon: 'error',
-        title: `Trade amount must be at least $${selectedExpiration.minTradeAmount}`,
-        toast: true,
-        position: 'top',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-      });
+      showToast.error(`Trade amount must be at least ${selectedExpiration.minTradeAmount} USD`);
       return;
     }
 
     if (tradeAmount > selectedExpiration.maxTradeAmount) {
-      Swal.fire({
-        icon: 'error',
-        title: `Trade amount cannot exceed $${selectedExpiration.maxTradeAmount}`,
-        toast: true,
-        position: 'top',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-      });
+      showToast.error(`Trade amount cannot exceed ${selectedExpiration.maxTradeAmount} USD`);
       return;
     }
 
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'User is not authenticated.',
-          confirmButtonColor: '#f59e0b', // Tailwind amber-500
-        });
+        showToast.warning("User is not authenticated");
         return;
       }
       let winLose = "Lose"; 
@@ -254,35 +208,13 @@ if (userWinLose === "Off") {
           // Error handling without console.log
         }
 
-        Swal.fire({
-          icon: 'success',
-          title: 'Trade submitted successfully.',
-          position: 'top',
-          showConfirmButton: true,
-          timer: 3000,
-          timerProgressBar: true,
-        });
-
+        showToast.success("Trade submitted successfully!");
         resetTradeState();
       } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Failed to submit trade data.',
-          position: 'top',
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-        });
+        showToast.error("Failed to submit trade");
       }
     } catch (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error submitting trade data.',
-        position: 'top',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-      });
+      showToast.error("Error submitting trade");
     }
   };
   const handleCountSecond = async () => {
@@ -302,102 +234,174 @@ if (userWinLose === "Off") {
   );
   
 
-  return isOpen ? (
+  if (!isOpen) return null;
+
+  return (
     <div 
       className="fixed inset-0 flex items-end justify-center z-[1000] bg-black/75 backdrop-blur-sm animate-[fadeIn_0.3s_ease]" 
       onClick={onClose}
     >
       <div 
-        className="bg-gradient-to-br from-[#0b0e14] to-[#1a1d29] border border-[#2a2d3a] rounded-t-3xl sm:rounded-t-[24px] w-full max-w-[600px] max-h-[90vh] overflow-y-auto p-4 sm:p-6 animate-[slideUp_0.3s_ease] shadow-[0_-8px_32px_rgba(0,0,0,0.5)]" 
+        className="bg-gradient-to-br from-[#0b0e14] to-[#1a1d29] border border-[#2a2d3a] rounded-t-3xl sm:rounded-t-[24px] w-full max-w-[600px] h-[75vh] sm:h-[90vh] max-h-[75vh] sm:max-h-[90vh] mb-6 sm:mb-0 overflow-y-auto overflow-x-hidden p-4 sm:p-6 animate-[slideUp_0.3s_ease] shadow-[0_-8px_32px_rgba(0,0,0,0.5)]" 
         onClick={(e) => e.stopPropagation()}
+        style={{ 
+          WebkitOverflowScrolling: 'touch',
+          overscrollBehavior: 'contain',
+          scrollbarWidth: 'thin',
+          scrollbarColor: 'rgba(20, 184, 166, 0.3) transparent'
+        }}
       >
-        <h1 className="text-sm sm:text-base md:text-lg font-semibold text-gray-300 mb-2">
-          {cryptoData.name}{" "}
-        </h1>
-        <h2 className="text-xs sm:text-sm md:text-base mb-4 text-gray-400">
-          ${cryptoData?.current_price ? cryptoData.current_price.toFixed(2) : cryptoData?.symbol}
-        </h2>
-
-        <input
-          type="number"
-          value={tradeAmount}
-          onChange={(e) => setTradeAmount(e.target.value)}
-          placeholder="enter amount here.."
-          className="mt-2 w-full p-2 sm:p-3 rounded border border-gray-600 text-[10px] sm:text-xs"
-          required
-        />
-
-        <div className="mt-3 sm:mt-4 gap-2 mb-2">
-          <h3 className="text-green-400 mt-3 sm:mt-4 mb-3 sm:mb-4 select-expiration-time-txt text-[10px] sm:text-xs">
-            Select expiration time
-          </h3>
-          {expirationOptions.map((option, index) => (
-            <button
-              key={index}
-              className={`px-2 sm:px-4 py-1.5 sm:py-2 mr-1 sm:mr-2 rounded mb-1.5 sm:mb-2 expiration-times text-[9px] sm:text-xs ${
-                highlightedButton === index ? "bg-green-500" : "bg-gray-700"
-              }`}
-              onClick={() => {
-                setExpirationTime(option.percentage);
-                setSelectedLabel(option.label); // Store selected label
-                setHighlightedButton(index);
-              }}
-            >
-              {option.label} | {option.percentage}%
-            </button>
-          ))}
+        {/* Header */}
+        <div className="flex justify-between items-start mb-4 sm:mb-6 pb-4 sm:pb-5 border-b border-[#2a2d3a]">
+          <div className="flex-1">
+            <h2 className="text-sm sm:text-base md:text-lg lg:text-2xl font-semibold sm:font-bold text-white mb-1 sm:mb-2 bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-400 bg-clip-text text-transparent">
+              {tradeType === "Buy" ? "Buy" : "Sell"} {cryptoData.name}
+            </h2>
+            <p className="text-xs sm:text-sm md:text-base text-gray-400">
+              <span className="text-[10px] sm:text-xs opacity-60">USD</span> {cryptoData?.current_price ? cryptoData.current_price.toFixed(2) : cryptoData?.symbol}
+            </p>
+          </div>
+          <button 
+            className="bg-[rgba(42,45,58,0.8)] border border-[#2a2d3a] text-white w-7 h-7 sm:w-8 sm:h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center transition-all duration-300 flex-shrink-0 text-sm sm:text-base hover:bg-red-500/20 hover:border-red-500 hover:text-red-500 hover:scale-110" 
+            onClick={onClose}
+          >
+            <FaTimes />
+          </button>
         </div>
 
+        {/* Balance Info */}
+        <div className="bg-[rgba(26,29,41,0.6)] border border-[#2a2d3a] rounded-xl p-3 sm:p-4 mb-4 sm:mb-6">
+          <div className="flex items-center gap-3">
+            <FaWallet className="text-teal-400 bg-teal-500/15 w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center text-base sm:text-lg" />
+            <div className="flex flex-col gap-1 flex-1">
+              <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wide">Demo Balance</span>
+              <span className="text-base sm:text-lg md:text-xl font-bold text-white"><span className="text-xs opacity-60">USD</span> {balance.toFixed(2)}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Trade Amount Input */}
+        <div className="mb-4 sm:mb-6">
+          <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-300 mb-2 sm:mb-3">Trade Amount (USDT)</label>
+          <div className="flex flex-col gap-3">
+            <input
+              type="number"
+              value={tradeAmount}
+              onChange={(e) => setTradeAmount(e.target.value)}
+              placeholder="Enter amount in USDT"
+              className="w-full px-3 sm:px-4 py-2.5 sm:py-4 bg-[rgba(11,14,20,0.6)] border border-[#2a2d3a] rounded-xl text-white text-sm sm:text-base md:text-lg font-semibold transition-all duration-300 focus:outline-none focus:border-teal-500 focus:bg-[rgba(11,14,20,0.8)] focus:shadow-[0_0_0_3px_rgba(38,166,154,0.1)] placeholder:text-gray-600"
+              required
+            />
+            <div className="grid grid-cols-4 gap-2">
+              {[25, 50, 75, 100].map((percent) => (
+                <button 
+                  key={percent}
+                  className="px-2 sm:px-2.5 py-1.5 sm:py-2.5 bg-[rgba(26,29,41,0.6)] border border-[#2a2d3a] rounded-lg text-gray-400 text-[10px] sm:text-xs font-medium cursor-pointer transition-all duration-300 hover:bg-teal-500/10 hover:border-teal-500 hover:text-teal-400"
+                  onClick={() => setTradeAmount((balance * (percent / 100)).toFixed(2))}
+                >
+                  {percent}%
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Expiration Time Selection */}
+        <div className="mb-4 sm:mb-6">
+          <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-300 mb-2 sm:mb-3">
+            <FaChartLine className="text-teal-400 text-sm sm:text-base" />
+            Select Expiration Time
+          </label>
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
+            {expirationOptions.map((option, index) => (
+              <button
+                key={index}
+                className={`flex flex-col items-center gap-1 sm:gap-2 p-3 sm:p-4 rounded-xl border transition-all duration-300 ${
+                  highlightedButton === index 
+                    ? "bg-teal-500/15 border-teal-500 shadow-[0_4px_12px_rgba(38,166,154,0.2)]" 
+                    : "bg-[rgba(26,29,41,0.6)] border-[#2a2d3a] hover:bg-[rgba(26,29,41,0.9)] hover:border-teal-500 hover:-translate-y-0.5"
+                }`}
+                onClick={() => {
+                  setExpirationTime(option.percentage);
+                  setSelectedLabel(option.label);
+                  setHighlightedButton(index);
+                }}
+              >
+                <span className="text-xs sm:text-sm md:text-base font-semibold text-white">{option.label}</span>
+                <span className="text-xs sm:text-sm text-teal-400 font-semibold">{option.percentage}%</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Min/Max Amounts */}
         {selectedExpiration && (
-          <div className="mt-3 sm:mt-4 bg-gray-700 rounded-lg p-2 sm:p-2.5">
-            <div className="flex justify-between items-center text-white mb-2">
-              <span className="text-[9px] sm:text-[10px]">Minimum Amount</span>
-              <p className="text-[9px] sm:text-[10px]"> ${selectedExpiration.minTradeAmount}</p>
-            </div>
-            <div className="flex justify-between items-center text-white">
-              <span className="text-[9px] sm:text-[10px]">Maximum Amount</span>
-              <p className="text-[9px] sm:text-[10px]">${selectedExpiration.maxTradeAmount}</p>
+          <div className="mb-4 sm:mb-6">
+            <div className="bg-[rgba(26,29,41,0.6)] border border-[#2a2d3a] rounded-xl p-3 sm:p-4 flex items-center gap-3 sm:gap-4">
+              <div className="flex-1 flex flex-col gap-1">
+                <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wide">Minimum</span>
+                <span className="text-sm sm:text-base font-semibold text-white"><span className="text-xs opacity-60">USD</span> {selectedExpiration.minTradeAmount.toLocaleString()}</span>
+              </div>
+              <div className="w-px h-10 bg-[#2a2d3a]"></div>
+              <div className="flex-1 flex flex-col gap-1">
+                <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wide">Maximum</span>
+                <span className="text-sm sm:text-base font-semibold text-white"><span className="text-xs opacity-60">USD</span> {selectedExpiration.maxTradeAmount.toLocaleString()}</span>
+              </div>
             </div>
           </div>
         )}
 
+        {/* Countdown Timer */}
         {isCounting && (
-          <div className="mt-3 sm:mt-4 w-full">
-            <div className="text-[10px] sm:text-xs text-green-500 mb-1">
-              Confirming in {countdown} seconds...
+          <div className="mb-4 sm:mb-6">
+            <div className="bg-teal-500/10 border border-teal-500/30 rounded-xl p-4 sm:p-5">
+              <div className="flex justify-between items-center mb-3">
+                <span className="text-xs sm:text-sm text-gray-400">Confirming in</span>
+                <span className="text-lg sm:text-xl md:text-2xl font-bold text-teal-400">{countdown}s</span>
+              </div>
+              <div className="w-full h-2 bg-[rgba(11,14,20,0.6)] rounded-full overflow-hidden mb-4">
+                <div
+                  className="h-full bg-gradient-to-r from-teal-500 to-cyan-500 transition-all duration-1000 rounded-full"
+                  style={{ width: `${((countSeconds - countdown) / countSeconds) * 100}%` }}
+                ></div>
+              </div>
+              <button 
+                className="w-full px-3 py-2.5 bg-red-500/10 border border-red-500/30 rounded-lg text-red-500 text-xs sm:text-sm font-semibold cursor-pointer transition-all duration-300 hover:bg-red-500/20 hover:border-red-500" 
+                onClick={resetTradeState}
+              >
+                Cancel Trade
+              </button>
             </div>
-            <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden">
-              <div
-                className="absolute h-full bg-blue-500 transition-all"
-                style={{ width: `${(countdown / countSeconds) * 100}%` }}
-              ></div>
-            </div>
-            <button
-              className="mt-2 text-[9px] sm:text-xs text-red-500 hover:underline"
-              onClick={resetTradeState}
-            >
-              Cancel
-            </button>
           </div>
         )}
 
-        <p className="mt-3 sm:mt-4 estimated-income text-[10px] sm:text-xs">
-          Estimated Income: ${estimatedIncome}
-        </p>
+        {/* Estimated Income */}
+        {estimatedIncome > 0 && (
+          <div className="mb-4 sm:mb-6">
+            <div className="bg-teal-500/10 border border-teal-500/30 rounded-xl p-4 sm:p-5 flex justify-between items-center">
+              <span className="text-xs sm:text-sm text-gray-400 font-medium">Estimated Income</span>
+              <span className="text-lg sm:text-xl md:text-2xl font-bold text-teal-400">+<span className="text-sm opacity-60">USD</span> {estimatedIncome}</span>
+            </div>
+          </div>
+        )}
 
-        <div className="flex justify-center mt-4 sm:mt-6 gap-3 sm:gap-6">
+        {/* Action Buttons */}
+        <div className="flex flex-col gap-3 mt-2">
           <button
-            className="bg-green-500 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded text-[10px] sm:text-xs"
+            className={`w-full px-4 py-3 sm:py-4 rounded-xl text-sm sm:text-base font-semibold cursor-pointer transition-all duration-300 border-none flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${
+              tradeType.toLowerCase() === 'buy'
+                ? 'bg-gradient-to-br from-teal-500 to-teal-600 text-white shadow-[0_4px_12px_rgba(38,166,154,0.3)] hover:shadow-[0_8px_20px_rgba(38,166,154,0.4)] hover:-translate-y-0.5'
+                : 'bg-gradient-to-br from-red-500 to-red-600 text-white shadow-[0_4px_12px_rgba(239,83,80,0.3)] hover:shadow-[0_8px_20px_rgba(239,83,80,0.4)] hover:-translate-y-0.5'
+            }`}
             onClick={handleCountSecond}
-            style={{ width: "50%" }}
-            disabled={loading} // Disable when loading or authenticating
+            disabled={loading || !tradeAmount || !expirationTime || isCounting}
           >
-            {tradeType}
+            {tradeType} {cryptoData.name}
           </button>
           <button
-            className="bg-red-500 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded text-[10px] sm:text-xs"
+            className="w-full px-4 py-3 sm:py-4 rounded-xl text-sm sm:text-base font-semibold cursor-pointer transition-all duration-300 border-none flex items-center justify-center gap-2 bg-[rgba(42,45,58,0.6)] border border-[#2a2d3a] text-gray-400 hover:bg-[rgba(42,45,58,0.8)] hover:border-gray-600 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={onClose}
-            style={{ width: "50%" }}
+            disabled={isCounting}
           >
             Cancel
           </button>
@@ -406,7 +410,7 @@ if (userWinLose === "Off") {
 
       <ToastContainer />
     </div>
-  ) : null;
+  );
 };
 
 export default DemoPopup;

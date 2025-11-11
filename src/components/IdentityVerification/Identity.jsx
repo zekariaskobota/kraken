@@ -16,7 +16,7 @@ import {
 } from "react-icons/fa";
 import { identityAPI } from "../../services/apiService";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+import { showToast } from "../../utils/toast";
 
 const Identity = () => {
   const [documentType, setDocumentType] = useState("Identity Card");
@@ -73,26 +73,12 @@ const Identity = () => {
     e.preventDefault();
 
     if (status === "Pending" || status === "Verified") {
-      Swal.fire({
-        title: "Info",
-        text: "You have already uploaded your identity document!",
-        icon: "info",
-        confirmButtonText: "OK",
-        background: "#0f172a",
-        color: "#e5e7eb",
-      });
+      showToast.info("You have already uploaded your identity document!");
       return;
     }
 
     if (!frontImage || !backImage) {
-      Swal.fire({
-        title: "Missing Documents",
-        text: "Please upload both front and back images of your document.",
-        icon: "warning",
-        confirmButtonText: "OK",
-        background: "#0f172a",
-        color: "#e5e7eb",
-      });
+      showToast.warning("Please upload both front and back images of your document");
       return;
     }
 
@@ -109,23 +95,9 @@ const Identity = () => {
     try {
       await identityAPI.verifyIdentity(formData);
       setStatus("Pending");
-      Swal.fire({
-        title: "Success!",
-        text: "Your identity verification request has been submitted successfully. We'll review it within 24-48 hours.",
-        icon: "success",
-        confirmButtonText: "OK",
-        background: "#0f172a",
-        color: "#e5e7eb",
-      });
+      showToast.success("Your identity verification request has been submitted successfully. We'll review it within 24-48 hours.");
     } catch (error) {
-      Swal.fire({
-        title: "Error!",
-        text: error.message || "Failed to upload identity document.",
-        icon: "error",
-        confirmButtonText: "OK",
-        background: "#0f172a",
-        color: "#e5e7eb",
-      });
+      showToast.error(error.message || "Failed to upload identity document");
     } finally {
       setLoading(false);
     }
@@ -135,30 +107,30 @@ const Identity = () => {
     switch (status) {
       case "Verified":
         return {
-          icon: <FaCheckCircle className="text-green-400" />,
+          icon: <FaCheckCircle className="text-teal-400" />,
           title: "Identity Verified",
           description: "Your identity has been successfully verified. You can now access all trading features.",
-          color: "from-green-500/20 to-emerald-500/10",
-          borderColor: "border-green-500/30",
-          badgeColor: "bg-green-500/20 text-green-400 border-green-500/30",
+          color: "from-gray-800/50 to-gray-900/50",
+          borderColor: "border-gray-700",
+          badgeColor: "bg-gray-800/50 text-teal-400 border-gray-700",
         };
       case "Pending":
         return {
-          icon: <FaClock className="text-yellow-400" />,
+          icon: <FaClock className="text-teal-400" />,
           title: "Verification Pending",
           description: "Your identity verification is currently being reviewed. We'll notify you once it's complete (usually within 24-48 hours).",
-          color: "from-yellow-500/20 to-orange-500/10",
-          borderColor: "border-yellow-500/30",
-          badgeColor: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
+          color: "from-gray-800/50 to-gray-900/50",
+          borderColor: "border-gray-700",
+          badgeColor: "bg-gray-800/50 text-teal-400 border-gray-700",
         };
       default:
         return {
-          icon: <FaTimesCircle className="text-red-400" />,
+          icon: <FaTimesCircle className="text-gray-400" />,
           title: "Not Verified",
           description: "Please complete identity verification to access all trading features and increase your account security.",
-          color: "from-red-500/20 to-pink-500/10",
-          borderColor: "border-red-500/30",
-          badgeColor: "bg-red-500/20 text-red-400 border-red-500/30",
+          color: "from-gray-800/50 to-gray-900/50",
+          borderColor: "border-gray-700",
+          badgeColor: "bg-gray-800/50 text-gray-400 border-gray-700",
         };
     }
   };
@@ -219,27 +191,27 @@ const Identity = () => {
 
         {/* Security Benefits */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-[rgba(26,29,41,0.8)] border border-[#2a2d3a] rounded-xl p-4">
+          <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-lg bg-teal-500/20 flex items-center justify-center text-teal-400">
+              <div className="w-10 h-10 rounded-lg bg-gray-700/50 flex items-center justify-center text-teal-400">
                 <FaLock />
               </div>
               <h3 className="text-sm font-semibold text-white">Enhanced Security</h3>
             </div>
             <p className="text-xs text-gray-400">Your account is protected with verified identity</p>
           </div>
-          <div className="bg-[rgba(26,29,41,0.8)] border border-[#2a2d3a] rounded-xl p-4">
+          <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400">
+              <div className="w-10 h-10 rounded-lg bg-gray-700/50 flex items-center justify-center text-teal-400">
                 <FaShieldAlt />
               </div>
               <h3 className="text-sm font-semibold text-white">Full Access</h3>
             </div>
             <p className="text-xs text-gray-400">Access all trading features and higher limits</p>
           </div>
-          <div className="bg-[rgba(26,29,41,0.8)] border border-[#2a2d3a] rounded-xl p-4">
+          <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center text-green-400">
+              <div className="w-10 h-10 rounded-lg bg-gray-700/50 flex items-center justify-center text-teal-400">
                 <FaCheckCircle />
               </div>
               <h3 className="text-sm font-semibold text-white">Compliance</h3>
@@ -254,13 +226,13 @@ const Identity = () => {
   return (
     <div className="w-full max-w-full p-0 box-border overflow-x-hidden">
       {/* Header Section */}
-      <div className="bg-gradient-to-br from-teal-500/10 via-cyan-500/10 to-blue-500/10 border border-teal-500/20 rounded-2xl p-6 sm:p-8 mb-6">
+      <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-6 sm:p-8 mb-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-teal-500/20 to-cyan-500/20 backdrop-blur-sm flex items-center justify-center text-3xl sm:text-4xl text-teal-400 flex-shrink-0">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gray-700/50 flex items-center justify-center text-3xl sm:text-4xl text-teal-400 flex-shrink-0">
             <FaShieldAlt />
           </div>
           <div className="flex-1">
-            <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">
               Identity Verification
             </h2>
             <p className="text-xs sm:text-sm text-gray-400">
@@ -271,7 +243,7 @@ const Identity = () => {
       </div>
 
       {/* Progress Indicator */}
-      <div className="bg-[rgba(26,29,41,0.8)] border border-[#2a2d3a] rounded-2xl p-4 sm:p-6 mb-6">
+      <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-4 sm:p-6 mb-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm sm:text-base font-semibold text-white">Verification Progress</h3>
           <span className="text-xs text-gray-400">{Math.round(progress)}% Complete</span>
@@ -302,9 +274,9 @@ const Identity = () => {
 
       {/* Why Verify Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div className="bg-[rgba(26,29,41,0.8)] border border-[#2a2d3a] rounded-xl p-4">
+        <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4">
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 flex-shrink-0">
+            <div className="w-10 h-10 rounded-lg bg-gray-700/50 flex items-center justify-center text-teal-400 flex-shrink-0">
               <FaInfoCircle />
             </div>
             <div>
@@ -315,9 +287,9 @@ const Identity = () => {
             </div>
           </div>
         </div>
-        <div className="bg-[rgba(26,29,41,0.8)] border border-[#2a2d3a] rounded-xl p-4">
+        <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4">
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center text-green-400 flex-shrink-0">
+            <div className="w-10 h-10 rounded-lg bg-gray-700/50 flex items-center justify-center text-teal-400 flex-shrink-0">
               <FaLock />
             </div>
             <div>
@@ -333,7 +305,7 @@ const Identity = () => {
       {/* Verification Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Document Type Selection */}
-        <div className="bg-[rgba(26,29,41,0.8)] border border-[#2a2d3a] rounded-2xl p-4 sm:p-6">
+        <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-4 sm:p-6">
           <h3 className="text-sm sm:text-base font-semibold text-white mb-4 flex items-center gap-2">
             <span className="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 flex items-center justify-center text-xs font-bold">
               1
@@ -349,7 +321,7 @@ const Identity = () => {
                 className={`p-4 rounded-xl border-2 transition-all duration-300 text-left ${
                   documentType === doc.value
                     ? "border-teal-500 bg-teal-500/10"
-                    : "border-[#2a2d3a] bg-[rgba(11,14,20,0.6)] hover:border-teal-500/50"
+                    : "border-gray-700 bg-gray-900/50 hover:border-teal-500/50"
                 }`}
               >
                 <div className={`text-2xl mb-2 ${documentType === doc.value ? "text-teal-400" : "text-gray-500"}`}>
@@ -365,7 +337,7 @@ const Identity = () => {
         </div>
 
         {/* Personal Information */}
-        <div className="bg-[rgba(26,29,41,0.8)] border border-[#2a2d3a] rounded-2xl p-4 sm:p-6">
+        <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-4 sm:p-6">
           <h3 className="text-sm sm:text-base font-semibold text-white mb-4 flex items-center gap-2">
             <span className="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 flex items-center justify-center text-xs font-bold">
               2
@@ -377,7 +349,7 @@ const Identity = () => {
               <label className="text-xs text-gray-400 font-medium">Full Name (as on document)</label>
               <input
                 type="text"
-                className="w-full px-4 py-3 bg-[rgba(11,14,20,0.6)] border border-[#2a2d3a] rounded-lg text-white text-sm transition-all duration-200 focus:outline-none focus:border-teal-500 focus:bg-[rgba(11,14,20,0.8)] placeholder:text-gray-600"
+                className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-lg text-white text-sm transition-all duration-200 focus:outline-none focus:border-teal-500 focus:bg-gray-900/70 placeholder:text-gray-600"
                 placeholder="Enter your full name"
                 value={realName}
                 onChange={(e) => setRealName(e.target.value)}
@@ -388,7 +360,7 @@ const Identity = () => {
               <label className="text-xs text-gray-400 font-medium">Document Number</label>
               <input
                 type="text"
-                className="w-full px-4 py-3 bg-[rgba(11,14,20,0.6)] border border-[#2a2d3a] rounded-lg text-white text-sm transition-all duration-200 focus:outline-none focus:border-teal-500 focus:bg-[rgba(11,14,20,0.8)] placeholder:text-gray-600"
+                className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-lg text-white text-sm transition-all duration-200 focus:outline-none focus:border-teal-500 focus:bg-gray-900/70 placeholder:text-gray-600"
                 placeholder="Enter document number"
                 value={documentNumber}
                 onChange={(e) => setDocumentNumber(e.target.value)}
@@ -399,17 +371,17 @@ const Identity = () => {
         </div>
 
         {/* Document Upload */}
-        <div className="bg-[rgba(26,29,41,0.8)] border border-[#2a2d3a] rounded-2xl p-4 sm:p-6">
+        <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-4 sm:p-6">
           <h3 className="text-sm sm:text-base font-semibold text-white mb-4 flex items-center gap-2">
             <span className="w-6 h-6 rounded-full bg-teal-500/20 text-teal-400 flex items-center justify-center text-xs font-bold">
               3
             </span>
             Upload Documents
           </h3>
-          <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+          <div className="mb-4 p-3 bg-gray-700/50 border border-gray-600 rounded-lg">
             <div className="flex items-start gap-2">
-              <FaExclamationTriangle className="text-yellow-400 text-sm mt-0.5 flex-shrink-0" />
-              <div className="text-xs text-yellow-200">
+              <FaExclamationTriangle className="text-teal-400 text-sm mt-0.5 flex-shrink-0" />
+              <div className="text-xs text-gray-300">
                 <strong>Important:</strong> Ensure documents are clear, well-lit, and all information is visible. Blurry or incomplete documents will be rejected.
               </div>
             </div>
@@ -427,8 +399,8 @@ const Identity = () => {
               />
               <label
                 htmlFor="front-upload"
-                className={`block w-full aspect-[4/3] bg-[rgba(11,14,20,0.6)] border-2 border-dashed rounded-xl cursor-pointer transition-all duration-300 overflow-hidden relative group ${
-                  frontPreview ? "border-teal-500/50" : "border-[#2a2d3a] hover:border-teal-500"
+                className={`block w-full aspect-[4/3] bg-gray-900/50 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-300 overflow-hidden relative group ${
+                  frontPreview ? "border-teal-500/50" : "border-gray-700 hover:border-teal-500"
                 }`}
               >
                 {frontPreview ? (
@@ -473,8 +445,8 @@ const Identity = () => {
               />
               <label
                 htmlFor="back-upload"
-                className={`block w-full aspect-[4/3] bg-[rgba(11,14,20,0.6)] border-2 border-dashed rounded-xl cursor-pointer transition-all duration-300 overflow-hidden relative group ${
-                  backPreview ? "border-teal-500/50" : "border-[#2a2d3a] hover:border-teal-500"
+                className={`block w-full aspect-[4/3] bg-gray-900/50 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-300 overflow-hidden relative group ${
+                  backPreview ? "border-teal-500/50" : "border-gray-700 hover:border-teal-500"
                 }`}
               >
                 {backPreview ? (

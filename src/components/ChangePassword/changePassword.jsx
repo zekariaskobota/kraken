@@ -3,7 +3,7 @@ import axios from "axios";
 import { FaKey, FaLock, FaShieldAlt, FaEye, FaEyeSlash } from "react-icons/fa";
 import { ToastContainer } from "react-toastify";
 import config from "../../config";
-import Swal from "sweetalert2";
+import { showToast } from "../../utils/toast";
 
 const ChangePassword = () => {
   const [activeTab, setActiveTab] = useState("login");
@@ -48,21 +48,11 @@ const ChangePassword = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      Swal.fire({
-        icon: "success",
-        title: "Success",
-        text: response.data.message,
-        confirmButtonColor: "#22c55e",
-      });
+      showToast.success(response.data.message);
       setFormData({ oldPassword: "", newPassword: "", confirmPassword: "" });
       setShowPasswords({ oldPassword: false, newPassword: false, confirmPassword: false });
     } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: error.response?.data?.message || "An error occurred",
-        confirmButtonColor: "#ef4444",
-      });
+      showToast.error(error.response?.data?.message || "An error occurred");
     } finally {
       setLoading(false);
     }

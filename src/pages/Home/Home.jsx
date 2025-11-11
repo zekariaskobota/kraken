@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { FaArrowDown, FaExchangeAlt, FaArrowUp, FaWallet, FaChartLine, FaSignOutAlt, FaGlobe, FaChevronDown, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaArrowDown, FaExchangeAlt, FaArrowUp, FaWallet, FaChartLine, FaSignOutAlt, FaGlobe, FaChevronDown, FaEye, FaEyeSlash, FaGamepad } from "react-icons/fa";
 import Carousel from "../../components/Carousel/Carousel";
 import Navbar from "../../components/Navbar/Navbar";
 import BottomNavigation from "../../components/BottomNavigation/BottomNavigation";
-import Footer from "../../components/Footer/Footer";
-import Swal from 'sweetalert2';
+import { showToast } from '../../utils/toast';
 import { useNavigate } from "react-router-dom";
 import ModernWatchlist from "../../components/Watchlist/ModernWatchlist";
 
@@ -161,14 +160,8 @@ const Home = () => {
   useEffect(() => {
   const token = localStorage.getItem("token");
   if (!token) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Session Expired',
-      text: 'Your login session expired, You need to log in again',
-      confirmButtonColor: '#22c55e', // Tailwind green-500
-    }).then(() => {
-      navigate("/login"); // Redirect to login after closing the alert
-    });
+    showToast.error("Your login session expired. Please log in again");
+    navigate("/login"); // Redirect to login
   }
 }, [navigate]);
 
@@ -323,7 +316,7 @@ const Home = () => {
           
           <div className="flex gap-3 flex-shrink-0">
             <Link 
-              to="/profile" 
+              to="/deposit" 
               className="flex items-center gap-2 px-4 md:px-6 py-3 rounded-lg text-sm font-medium text-teal-400 border border-teal-500/30 bg-[rgba(26,29,41,0.6)] transition-all duration-300 hover:bg-teal-500/10 hover:border-teal-500/50 hover:-translate-y-0.5"
             >
               <FaArrowDown className="text-sm" />
@@ -333,51 +326,53 @@ const Home = () => {
         </div>
       </div>
 
-      <Carousel />
-
-      <div className="max-w-full w-full mx-auto px-4 md:px-6 box-border">
-        {/* Trading Features Section */}
-        <div className="mb-6 mt-6">
-          <div className="grid grid-cols-4 gap-1">
-            <Link 
-              to="/trade" 
-              className="flex flex-col items-center gap-1 text-center transition-all duration-300 group"
-            >
+      {/* Trading Features Section */}
+      <div className="max-w-full w-full mx-auto px-4 md:px-6 box-border py-6">
+        <div className="grid grid-cols-4 gap-1">
+          <Link 
+            to="/deposit" 
+            className="flex flex-col items-center gap-1 text-center transition-all duration-300 group"
+          >
               <div className="w-11 h-11 rounded-full bg-teal-500/15 flex items-center justify-center text-teal-400 transition-all duration-300 group-hover:bg-teal-500/25 group-hover:scale-105">
                 <FaArrowDown className="text-lg" />
               </div>
               <h3 className="text-[10px] font-normal text-gray-400">Deposit</h3>
             </Link>
-            <Link 
-              to="/trade" 
-              className="flex flex-col items-center gap-1 text-center transition-all duration-300 group"
-            >
-              <div className="w-11 h-11 rounded-full bg-teal-500/15 flex items-center justify-center text-teal-400 transition-all duration-300 group-hover:bg-teal-500/25 group-hover:scale-105">
-                <FaExchangeAlt className="text-lg" />
-              </div>
-              <h3 className="text-[10px] font-normal text-gray-400">Trade</h3>
-            </Link>
-            <Link 
-              to="/profile" 
-              className="flex flex-col items-center gap-1 text-center transition-all duration-300 group"
-            >
-              <div className="w-11 h-11 rounded-full bg-teal-500/15 flex items-center justify-center text-teal-400 transition-all duration-300 group-hover:bg-teal-500/25 group-hover:scale-105">
-                <FaArrowUp className="text-lg" />
-              </div>
-              <h3 className="text-[10px] font-normal text-gray-400">Withdraw</h3>
-            </Link>
-            <Link 
-              to="/market" 
-              className="flex flex-col items-center gap-1 text-center transition-all duration-300 group"
-            >
-              <div className="w-11 h-11 rounded-full bg-teal-500/15 flex items-center justify-center text-teal-400 transition-all duration-300 group-hover:bg-teal-500/25 group-hover:scale-105">
-                <FaGlobe className="text-lg" />
-              </div>
-              <h3 className="text-[10px] font-normal text-gray-400">Markets</h3>
-            </Link>
-          </div>
+          <Link 
+            to="/trade" 
+            className="flex flex-col items-center gap-1 text-center transition-all duration-300 group"
+          >
+            <div className="w-11 h-11 rounded-full bg-teal-500/15 flex items-center justify-center text-teal-400 transition-all duration-300 group-hover:bg-teal-500/25 group-hover:scale-105">
+              <FaExchangeAlt className="text-lg" />
+            </div>
+            <h3 className="text-[10px] font-normal text-gray-400">Trade</h3>
+          </Link>
+          <Link 
+            to="/profile" 
+            className="flex flex-col items-center gap-1 text-center transition-all duration-300 group"
+          >
+            <div className="w-11 h-11 rounded-full bg-teal-500/15 flex items-center justify-center text-teal-400 transition-all duration-300 group-hover:bg-teal-500/25 group-hover:scale-105">
+              <FaArrowUp className="text-lg" />
+            </div>
+            <h3 className="text-[10px] font-normal text-gray-400">Withdraw</h3>
+          </Link>
+          <Link 
+            to="/demo" 
+            className="flex flex-col items-center gap-1 text-center transition-all duration-300 group"
+          >
+            <div className="w-11 h-11 rounded-full bg-teal-500/15 flex items-center justify-center text-teal-400 transition-all duration-300 group-hover:bg-teal-500/25 group-hover:scale-105">
+              <FaGamepad className="text-lg" />
+            </div>
+            <h3 className="text-[10px] font-normal text-gray-400">Demo</h3>
+          </Link>
         </div>
+      </div>
 
+      <div className="max-w-full w-full mx-auto px-4 md:px-6 box-border">
+        <Carousel />
+      </div>
+
+      <div className="max-w-full w-full mx-auto px-4 md:px-6 box-border">
         <div className="text-center mb-8 pt-5">
           <h2 className="text-base sm:text-lg md:text-xl font-medium text-white mb-2">Market Overview</h2>
           <p className="text-xs sm:text-sm text-gray-400">Real-time cryptocurrency prices and trends</p>
@@ -386,7 +381,6 @@ const Home = () => {
         <ModernWatchlist />
       </div>
       <BottomNavigation />
-      <Footer />
     </div>
   );
 };

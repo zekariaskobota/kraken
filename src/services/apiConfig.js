@@ -1,5 +1,8 @@
 export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
+// Google OAuth Configuration
+export const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '592543508035-3ncna0c2a98bot0i8vjiudas527rm3u2.apps.googleusercontent.com';
+
 export const API_ENDPOINTS = {
   // Auth
   auth: {

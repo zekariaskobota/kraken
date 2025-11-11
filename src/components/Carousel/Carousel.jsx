@@ -86,7 +86,7 @@ const Carousel = () => {
 
   if (loading) {
     return (
-      <div className="relative w-full h-auto min-h-[200px] md:min-h-[280px] lg:min-h-[350px] overflow-hidden rounded-xl md:rounded-2xl mb-6 md:mb-8 shadow-2xl mx-auto max-w-7xl bg-gradient-to-br from-[#0b0e14] to-[#1a1d29] border border-[#2a2d3a] flex items-center justify-center">
+      <div className="relative w-full h-auto min-h-[180px] md:min-h-[280px] lg:min-h-[350px] overflow-hidden rounded-xl md:rounded-2xl mb-6 md:mb-8 shadow-2xl mx-auto max-w-7xl bg-gradient-to-br from-[#0b0e14] to-[#1a1d29] border border-[#2a2d3a] flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-[#2a2d3a] border-t-teal-500 rounded-full animate-spin"></div>
       </div>
     );
@@ -97,7 +97,7 @@ const Carousel = () => {
   }
 
   return (
-    <div className="relative w-full h-auto min-h-[200px] md:min-h-[280px] lg:min-h-[350px] overflow-hidden rounded-xl md:rounded-2xl mb-6 md:mb-8 shadow-2xl mx-auto max-w-7xl bg-gradient-to-br from-[#0b0e14] to-[#1a1d29] border border-[#2a2d3a]">
+    <div className="relative w-full h-auto min-h-[180px] md:min-h-[280px] lg:min-h-[350px] overflow-hidden rounded-xl md:rounded-2xl mb-6 md:mb-8 shadow-2xl mx-auto max-w-7xl bg-gradient-to-br from-[#0b0e14] to-[#1a1d29] border border-[#2a2d3a]">
       <div className="relative w-full">
         {slides.map((slide, index) => (
           <div
@@ -106,9 +106,9 @@ const Carousel = () => {
               index === current ? 'opacity-100 z-10 block' : 'opacity-0 z-0 hidden'
             }`}
           >
-            <div className="flex flex-col md:flex-row items-center w-full">
-              {/* Image on Left */}
-              <div className="w-full md:w-1/2 h-[200px] md:h-[280px] lg:h-[350px] relative overflow-hidden rounded-l-xl md:rounded-l-2xl">
+            <div className="flex flex-row items-center w-full">
+              {/* Image on Left - Smaller on mobile */}
+              <div className="w-2/5 md:w-1/2 h-[180px] md:h-[280px] lg:h-[350px] relative overflow-hidden rounded-l-xl md:rounded-l-2xl flex-shrink-0">
                 <img 
                   src={slide.image} 
                   alt={slide.title} 
@@ -122,23 +122,23 @@ const Carousel = () => {
               </div>
               
               {/* Text Content on Right */}
-              <div className="w-full md:w-1/2 p-4 md:p-6 lg:p-8 flex flex-col justify-center h-[200px] md:h-[280px] lg:h-[350px] bg-gradient-to-br from-[#0b0e14] to-[#1a1d29] rounded-r-xl md:rounded-r-2xl">
-                <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold mb-2 md:mb-3 bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-500 bg-clip-text text-transparent">
+              <div className="w-3/5 md:w-1/2 p-3 md:p-6 lg:p-8 flex flex-col justify-center h-[180px] md:h-[280px] lg:h-[350px] bg-gradient-to-br from-[#0b0e14] to-[#1a1d29] rounded-r-xl md:rounded-r-2xl">
+                <h2 className="text-sm sm:text-base md:text-xl lg:text-2xl xl:text-3xl font-bold mb-1.5 md:mb-3 bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-500 bg-clip-text text-transparent">
                   {slide.title}
                 </h2>
-                <p className="text-xs sm:text-sm md:text-base text-gray-300 mb-4 md:mb-5 leading-relaxed">
+                <p className="text-[10px] sm:text-xs md:text-base text-gray-300 mb-2 md:mb-5 leading-relaxed line-clamp-2 md:line-clamp-none">
                   {slide.description}
                 </p>
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex gap-1.5 md:gap-2 flex-wrap">
                   <Link 
                     to={slide.primaryBtn.link} 
-                    className="px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-medium bg-gradient-to-r from-teal-500 to-teal-600 text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-teal-500/40"
+                    className="px-2 md:px-4 py-1 md:py-2 rounded-md md:rounded-lg text-[10px] md:text-sm font-medium bg-gradient-to-r from-teal-500 to-teal-600 text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-teal-500/40"
                   >
                     {slide.primaryBtn.text}
                   </Link>
                   <Link 
                     to={slide.secondaryBtn.link} 
-                    className="px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-medium bg-white/10 text-white border border-white/20 transition-all duration-300 hover:bg-white/20"
+                    className="px-2 md:px-4 py-1 md:py-2 rounded-md md:rounded-lg text-[10px] md:text-sm font-medium bg-white/10 text-white border border-white/20 transition-all duration-300 hover:bg-white/20"
                   >
                     {slide.secondaryBtn.text}
                   </Link>

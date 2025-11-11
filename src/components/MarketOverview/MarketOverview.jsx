@@ -50,7 +50,7 @@ const MarketOverview = () => {
 
   if (loading) {
     return (
-      <div className="bg-gradient-to-br from-[rgba(26,29,41,0.8)] to-[rgba(11,14,20,0.6)] border border-[#2a2d3a] rounded-2xl p-4 sm:p-6">
+      <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-4 sm:p-6">
         <div className="animate-pulse space-y-4">
           <div className="h-6 bg-slate-700/50 rounded w-1/3"></div>
           <div className="space-y-2">
@@ -70,14 +70,14 @@ const MarketOverview = () => {
         {items.map((item, index) => (
           <div
             key={index}
-            className="flex items-center justify-between p-2 bg-[rgba(11,14,20,0.6)] rounded-lg border border-[#2a2d3a] hover:border-teal-500/50 transition-all duration-300 cursor-pointer"
+            className="flex items-center justify-between p-2 bg-gray-900/50 rounded-lg border border-gray-700 hover:border-teal-500/50 transition-all duration-300 cursor-pointer"
             onClick={() => navigate("/trade")}
           >
             <div className="flex-1">
               <div className="text-xs sm:text-sm font-medium text-white">{item.symbol}</div>
               <div className="text-xs text-gray-500">${item.price.toLocaleString()}</div>
             </div>
-            <div className={`text-xs sm:text-sm font-semibold flex items-center gap-1 ${isGainer ? "text-green-400" : "text-red-400"}`}>
+            <div className={`text-xs sm:text-sm font-semibold flex items-center gap-1 ${isGainer ? "text-teal-400" : "text-gray-400"}`}>
               {isGainer ? <FaArrowUp className="text-xs" /> : <FaArrowDown className="text-xs" />}
               {Math.abs(item.changePercent).toFixed(2)}%
             </div>
@@ -88,7 +88,7 @@ const MarketOverview = () => {
   );
 
   return (
-    <div className="bg-gradient-to-br from-[rgba(26,29,41,0.8)] to-[rgba(11,14,20,0.6)] border border-[#2a2d3a] rounded-2xl p-4 sm:p-6 shadow-xl">
+    <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-4 sm:p-6 shadow-xl">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <FaGlobe className="text-teal-400 text-lg" />
@@ -106,20 +106,20 @@ const MarketOverview = () => {
       <MarketList title="Top Losers" items={topLosers} isGainer={false} />
 
       {watchlist.length > 0 && (
-        <div className="mt-4 pt-4 border-t border-[#2a2d3a]">
+        <div className="mt-4 pt-4 border-t border-gray-700">
           <div className="flex items-center gap-2 mb-2">
-            <FaStar className="text-yellow-400 text-sm" />
+            <FaStar className="text-teal-400 text-sm" />
             <h4 className="text-xs sm:text-sm font-semibold text-gray-400">Watchlist</h4>
           </div>
           <div className="space-y-2">
             {watchlist.map((item, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between p-2 bg-[rgba(11,14,20,0.6)] rounded-lg border border-[#2a2d3a] hover:border-teal-500/50 transition-all duration-300 cursor-pointer"
+                className="flex items-center justify-between p-2 bg-gray-900/50 rounded-lg border border-gray-700 hover:border-teal-500/50 transition-all duration-300 cursor-pointer"
                 onClick={() => navigate("/trade")}
               >
                 <div className="text-xs sm:text-sm font-medium text-white">{item.symbol}</div>
-                <div className="text-xs text-green-400 font-semibold">+{item.changePercent.toFixed(2)}%</div>
+                <div className="text-xs text-teal-400 font-semibold">+{item.changePercent.toFixed(2)}%</div>
               </div>
             ))}
           </div>

@@ -3,7 +3,7 @@ import { FaCopy, FaArrowDown, FaArrowUp, FaExchangeAlt, FaGlobe, FaWallet, FaClo
 import { useNavigate, Link } from "react-router-dom";
 import { authAPI, depositsAPI, withdrawalsAPI, identityAPI, adminAPI } from "../../services/apiService";
 import axios from "axios";
-import Swal from "sweetalert2";
+import { showToast } from "../../utils/toast";
 
 const PersonalCenter = ({ showDepositModal: externalShowDepositModal, showWithdrawModal: externalShowWithdrawModal, onCloseModals }) => {
   const [internalShowDepositModal, setInternalShowDepositModal] = useState(false);
@@ -167,14 +167,8 @@ const PersonalCenter = ({ showDepositModal: externalShowDepositModal, showWithdr
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      Swal.fire({
-        icon: "error",
-        title: "Session Expired",
-        text: "Your login session expired, You need to log in again",
-        confirmButtonColor: "#22c55e",
-      }).then(() => {
-        navigate("/login");
-      });
+      showToast.error("Your login session expired. Please log in again");
+      navigate("/login");
     }
   }, [navigate]);
 
@@ -262,23 +256,13 @@ const PersonalCenter = ({ showDepositModal: externalShowDepositModal, showWithdr
 
     try {
       const { balance } = await depositsAPI.createDeposit(formData);
-      Swal.fire({
-        icon: "success",
-        title: "Deposit Successful!",
-        text: "Your deposit has been submitted successfully.",
-        confirmButtonColor: "#22c55e",
-      });
+      showToast.success("Your deposit has been submitted successfully");
       setProfile((prev) => ({ ...prev, balance }));
       setDepositAmount("");
       setDepositProof(null);
       setShowDepositModal(false);
     } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Deposit Failed",
-        text: error.message || "Something went wrong. Please try again later.",
-        confirmButtonColor: "#ef4444",
-      });
+      showToast.error(error.message || "Deposit failed. Something went wrong. Please try again later");
     } finally {
       setDepositLoading(false);
     }
@@ -300,12 +284,7 @@ const PersonalCenter = ({ showDepositModal: externalShowDepositModal, showWithdr
     let minimumWithdrawalAmount = 15;
 
     if (withdrawAmount < minimumWithdrawalAmount) {
-      Swal.fire({
-        icon: "warning",
-        title: "Withdrawal Amount Too Low",
-        text: `The minimum withdrawal amount is ${minimumWithdrawalAmount}. Please enter a valid amount.`,
-        confirmButtonText: "Okay",
-      });
+      showToast.warning(`The minimum withdrawal amount is ${minimumWithdrawalAmount}. Please enter a valid amount`);
 
       setWithdrawLoading(false);
       return;
@@ -318,23 +297,13 @@ const PersonalCenter = ({ showDepositModal: externalShowDepositModal, showWithdr
         withdrawalNetwork: withdrawNetwork,
       });
       
-      Swal.fire({
-        icon: "success",
-        title: "Withdrawal Successful!",
-        text: "Your withdrawal has been processed successfully.",
-        confirmButtonColor: "#22c55e",
-      });
+      showToast.success("Your withdrawal has been processed successfully");
       setProfile((prev) => ({ ...prev, balance }));
       setWithdrawAmount("");
       setWithdrawAddress("");
       setShowWithdrawModal(false);
     } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Withdrawal Failed",
-        text: error.message || "Something went wrong. Please try again later.",
-        confirmButtonColor: "#ef4444",
-      });
+      showToast.error(error.message || "Withdrawal failed. Something went wrong. Please try again later");
     } finally {
       setWithdrawLoading(false);
     }
@@ -392,12 +361,7 @@ const PersonalCenter = ({ showDepositModal: externalShowDepositModal, showWithdr
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(address);
-    Swal.fire({
-      icon: "success",
-      title: "Copied to Clipboard!",
-      text: `${selectedCrypto} address has been copied to your clipboard.`,
-      confirmButtonColor: "#22c55e",
-    });
+    showToast.success(`${selectedCrypto} address has been copied to your clipboard`);
   };
 
   const getStatusBadgeClass = (status) => {
@@ -526,47 +490,45 @@ const PersonalCenter = ({ showDepositModal: externalShowDepositModal, showWithdr
             </div>
             
             {/* Quick Action Buttons - No Background */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+            <div className="grid grid-cols-4 gap-2 sm:gap-4">
               <button
-                onClick={() => setShowDepositModal(true)}
+                onClick={() => navigate("/deposit")}
                 className="group flex flex-col items-center gap-2 transition-all duration-300 hover:scale-105"
-                disabled={depositLoading}
               >
-                <div className="w-12 h-12 rounded-full bg-teal-700/90 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <FaArrowDown className="text-teal-300 text-lg" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-transparent border border-teal-500/30 flex items-center justify-center group-hover:scale-110 group-hover:border-teal-500 transition-all">
+                  <FaArrowDown className="text-teal-300 text-base sm:text-lg" />
                 </div>
-                <span className="text-xs sm:text-sm font-normal text-white">Deposit</span>
+                <span className="text-[10px] sm:text-sm font-normal text-white">Deposit</span>
               </button>
               
               <button
                 onClick={() => navigate("/trade")}
                 className="group flex flex-col items-center gap-2 transition-all duration-300 hover:scale-105"
               >
-                <div className="w-12 h-12 rounded-full bg-teal-700/90 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <FaExchangeAlt className="text-teal-300 text-lg" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-transparent border border-teal-500/30 flex items-center justify-center group-hover:scale-110 group-hover:border-teal-500 transition-all">
+                  <FaExchangeAlt className="text-teal-300 text-base sm:text-lg" />
                 </div>
-                <span className="text-xs sm:text-sm font-normal text-white">Trade</span>
+                <span className="text-[10px] sm:text-sm font-normal text-white">Trade</span>
               </button>
               
               <button
-                onClick={() => setShowWithdrawModal(true)}
+                onClick={() => navigate("/withdraw")}
                 className="group flex flex-col items-center gap-2 transition-all duration-300 hover:scale-105"
-                disabled={withdrawLoading}
               >
-                <div className="w-12 h-12 rounded-full bg-teal-700/90 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <FaArrowUp className="text-teal-300 text-lg" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-transparent border border-teal-500/30 flex items-center justify-center group-hover:scale-110 group-hover:border-teal-500 transition-all">
+                  <FaArrowUp className="text-teal-300 text-base sm:text-lg" />
                 </div>
-                <span className="text-xs sm:text-sm font-normal text-white">Withdraw</span>
+                <span className="text-[10px] sm:text-sm font-normal text-white">Withdraw</span>
               </button>
               
               <button
                 onClick={() => navigate("/market")}
                 className="group flex flex-col items-center gap-2 transition-all duration-300 hover:scale-105"
               >
-                <div className="w-12 h-12 rounded-full bg-teal-700/90 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <FaGlobe className="text-teal-300 text-lg" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-transparent border border-teal-500/30 flex items-center justify-center group-hover:scale-110 group-hover:border-teal-500 transition-all">
+                  <FaGlobe className="text-teal-300 text-base sm:text-lg" />
                 </div>
-                <span className="text-xs sm:text-sm font-normal text-white">Markets</span>
+                <span className="text-[10px] sm:text-sm font-normal text-white">Markets</span>
               </button>
             </div>
           </div>

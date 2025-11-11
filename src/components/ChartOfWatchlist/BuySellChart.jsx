@@ -5,7 +5,7 @@ import BottomNavigation from "../BottomNavigation/BottomNavigation";
 import UnifiedRealTimeChart from "../Chart/UnifiedRealTimeChart";
 import OrderEntryPanel from "../ModernTrading/OrderEntryPanel";
 import axios from "axios";
-import Swal from 'sweetalert2';
+import { showToast } from '../../utils/toast';
 
 const BuySellChart = () => {
   const location = useLocation();

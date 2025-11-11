@@ -125,7 +125,7 @@ const Achievements = () => {
 
   if (loading) {
     return (
-      <div className="bg-gradient-to-br from-[rgba(26,29,41,0.8)] to-[rgba(11,14,20,0.6)] border border-[#2a2d3a] rounded-2xl p-4 sm:p-6">
+      <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-4 sm:p-6">
         <div className="animate-pulse space-y-4">
           <div className="h-6 bg-slate-700/50 rounded w-1/3"></div>
           <div className="grid grid-cols-2 gap-3">
@@ -139,9 +139,9 @@ const Achievements = () => {
   }
 
   return (
-    <div className="bg-gradient-to-br from-[rgba(26,29,41,0.8)] to-[rgba(11,14,20,0.6)] border border-[#2a2d3a] rounded-2xl p-4 sm:p-6 shadow-xl">
+    <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-4 sm:p-6 shadow-xl">
       <div className="flex items-center gap-2 mb-4">
-        <FaTrophy className="text-yellow-400 text-lg" />
+        <FaTrophy className="text-teal-400 text-lg" />
         <h3 className="text-base sm:text-lg font-semibold text-white">Achievements</h3>
       </div>
 
@@ -151,8 +151,8 @@ const Achievements = () => {
             key={achievement.id}
             className={`p-3 rounded-lg border transition-all duration-300 ${
               achievement.unlocked
-                ? "bg-gradient-to-br from-yellow-500/20 to-orange-500/10 border-yellow-500/30"
-                : "bg-[rgba(11,14,20,0.6)] border-[#2a2d3a] opacity-60"
+                ? "bg-gray-700/50 border-teal-500/30"
+                : "bg-gray-900/50 border-gray-700 opacity-60"
             }`}
           >
             <div className="flex items-start gap-2 mb-2">
@@ -174,17 +174,13 @@ const Achievements = () => {
                     : achievement.current}
                   /{achievement.id === 5 || achievement.id === 6 ? formatCurrency(achievement.target) : achievement.target}
                 </span>
-                <span className={achievement.unlocked ? "text-yellow-400" : "text-gray-500"}>
+                <span className={achievement.unlocked ? "text-teal-400" : "text-gray-500"}>
                   {achievement.progress.toFixed(0)}%
                 </span>
               </div>
               <div className="w-full bg-slate-700/50 rounded-full h-1.5">
                 <div
-                  className={`h-1.5 rounded-full transition-all duration-500 ${
-                    achievement.unlocked
-                      ? "bg-gradient-to-r from-yellow-400 to-orange-400"
-                      : "bg-gradient-to-r from-teal-400 to-cyan-400"
-                  }`}
+                  className="bg-teal-500 h-1.5 rounded-full transition-all duration-500"
                   style={{ width: `${Math.min(achievement.progress, 100)}%` }}
                 ></div>
               </div>

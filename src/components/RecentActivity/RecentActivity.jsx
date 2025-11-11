@@ -29,7 +29,7 @@ const RecentActivity = () => {
         winLose: t.winLose,
         timestamp: t.createdAt,
         icon: <FaExchangeAlt />,
-        color: t.winLose === "Win" ? "text-green-400" : t.winLose === "Lose" ? "text-red-400" : "text-gray-400",
+        color: t.winLose === "Win" ? "text-teal-400" : "text-gray-400",
       }));
 
       const deposits = (depositsData.deposits || []).map((d) => ({
@@ -40,7 +40,7 @@ const RecentActivity = () => {
         status: d.status,
         timestamp: d.createdAt,
         icon: <FaArrowDown />,
-        color: "text-green-400",
+        color: "text-teal-400",
       }));
 
       const withdrawals = (withdrawalsData.withdrawals || []).map((w) => ({
@@ -51,7 +51,7 @@ const RecentActivity = () => {
         status: w.status,
         timestamp: w.createdAt,
         icon: <FaArrowUp />,
-        color: "text-red-400",
+        color: "text-gray-400",
       }));
 
       const allActivities = [...trades, ...deposits, ...withdrawals]
@@ -94,12 +94,12 @@ const RecentActivity = () => {
     switch (status) {
       case "Approved":
       case "Completed":
-        return "text-green-400";
+        return "text-teal-400";
       case "Pending":
       case "Processing":
-        return "text-yellow-400";
+        return "text-gray-400";
       case "Rejected":
-        return "text-red-400";
+        return "text-gray-400";
       default:
         return "text-gray-400";
     }
@@ -107,7 +107,7 @@ const RecentActivity = () => {
 
   if (loading) {
     return (
-      <div className="bg-gradient-to-br from-[rgba(26,29,41,0.8)] to-[rgba(11,14,20,0.6)] border border-[#2a2d3a] rounded-2xl p-4 sm:p-6">
+      <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-4 sm:p-6">
         <div className="animate-pulse space-y-3">
           {[1, 2, 3, 4, 5].map((i) => (
             <div key={i} className="h-12 bg-slate-700/50 rounded"></div>
@@ -118,7 +118,7 @@ const RecentActivity = () => {
   }
 
   return (
-    <div className="bg-gradient-to-br from-[rgba(26,29,41,0.8)] to-[rgba(11,14,20,0.6)] border border-[#2a2d3a] rounded-2xl p-4 sm:p-6 shadow-xl">
+    <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-4 sm:p-6 shadow-xl">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-base sm:text-lg font-semibold text-white">Recent Activity</h3>
         <FaClock className="text-gray-400 text-sm" />
@@ -130,9 +130,9 @@ const RecentActivity = () => {
           activities.map((activity) => (
             <div
               key={activity.id}
-              className="flex items-center gap-3 p-3 bg-[rgba(11,14,20,0.6)] rounded-lg border border-[#2a2d3a] hover:border-teal-500/50 transition-all duration-300"
+              className="flex items-center gap-3 p-3 bg-gray-900/50 rounded-lg border border-gray-700 hover:border-teal-500/50 transition-all duration-300"
             >
-              <div className={`w-8 h-8 rounded-lg bg-gradient-to-br from-teal-500/20 to-cyan-500/10 flex items-center justify-center ${activity.color}`}>
+              <div className={`w-8 h-8 rounded-lg bg-gray-700/50 flex items-center justify-center ${activity.color}`}>
                 {activity.icon}
               </div>
               <div className="flex-1 min-w-0">

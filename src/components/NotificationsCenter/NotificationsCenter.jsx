@@ -178,13 +178,13 @@ const NotificationsCenter = () => {
   const getIcon = (type) => {
     switch (type) {
       case "success":
-        return <FaCheckCircle className="text-green-400" />;
+        return <FaCheckCircle className="text-teal-400" />;
       case "warning":
-        return <FaExclamationCircle className="text-yellow-400" />;
+        return <FaExclamationCircle className="text-gray-400" />;
       case "error":
-        return <FaExclamationCircle className="text-red-400" />;
+        return <FaExclamationCircle className="text-gray-400" />;
       default:
-        return <FaInfoCircle className="text-blue-400" />;
+        return <FaInfoCircle className="text-teal-400" />;
     }
   };
 
@@ -204,7 +204,7 @@ const NotificationsCenter = () => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-[rgba(26,29,41,0.8)] to-[rgba(11,14,20,0.6)] border border-[#2a2d3a] rounded-2xl p-4 sm:p-6 shadow-xl">
+    <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-4 sm:p-6 shadow-xl">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <FaBell className="text-teal-400 text-lg" />
@@ -236,7 +236,7 @@ const NotificationsCenter = () => {
               key={notification.id}
               className={`flex items-start gap-3 p-3 rounded-lg border transition-all duration-300 ${
                 notification.read
-                  ? "bg-[rgba(11,14,20,0.6)] border-[#2a2d3a]"
+                  ? "bg-gray-900/50 border-gray-700"
                   : "bg-teal-500/10 border-teal-500/30"
               }`}
             >

@@ -1,9 +1,10 @@
 // TradeHistory.js
 import React, { useState, useEffect } from "react";
 import tradeHistoryController from "../../controllers/tradeHistoryController";
-import Swal from "sweetalert2";
 import config from "../../config";
 import { FaTimes } from "react-icons/fa";
+import ConfirmPopup from "../ConfirmPopup/ConfirmPopup";
+import { showToast } from "../../utils/toast";
 
 const TradeHistory = () => {
   const [trades, setTrades] = useState([]);
@@ -12,6 +13,7 @@ const TradeHistory = () => {
   const [tradesPerPage, setTradesPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [error, setError] = useState(null);
+  const [confirmPopup, setConfirmPopup] = useState({ isOpen: false, tradeId: null });
 
   useEffect(() => {
     tradeHistoryController.getTrades(setTrades, setTotalPages, setError);
@@ -23,23 +25,19 @@ const TradeHistory = () => {
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(indexOfFirstTrade, indexOfLastTrade);
 
-  const handleCancelTrade = async (tradeId) => {
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "Do you want to cancel this trade?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, cancel it!",
-    });
+  const handleCancelTrade = (tradeId) => {
+    setConfirmPopup({ isOpen: true, tradeId });
+  };
 
-    if (!result.isConfirmed) return;
+  const confirmCancelTrade = async () => {
+    const tradeId = confirmPopup.tradeId;
+    if (!tradeId) return;
 
     try {
       const token = localStorage.getItem("token");
       if (!token) {
         console.error("No token found");
+        showToast.error("Authentication required");
         return;
       }
 
@@ -56,21 +54,16 @@ const TradeHistory = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Remove cancelled deposit from state
+        // Remove cancelled trade from state
         setTrades((prev) => prev.filter((dep) => dep._id !== tradeId));
-
-        Swal.fire("Cancelled!", "Trade has been cancelled.", "success");
+        showToast.success("Trade has been cancelled successfully");
       } else {
         console.error("Error cancelling trade:", data.message);
-        Swal.fire(
-          "Error",
-          data.message || "Failed to cancel trade.",
-          "error"
-        );
+        showToast.error(data.message || "Failed to cancel trade");
       }
     } catch (error) {
       console.error("Error cancelling trade:", error);
-      Swal.fire("Error", "An error occurred. Please try again.", "error");
+      showToast.error("An error occurred. Please try again");
     }
   };
   return (
@@ -266,6 +259,18 @@ const TradeHistory = () => {
           </div>
         </div>
       )}
+
+      {/* Confirmation Popup */}
+      <ConfirmPopup
+        isOpen={confirmPopup.isOpen}
+        onClose={() => setConfirmPopup({ isOpen: false, tradeId: null })}
+        onConfirm={confirmCancelTrade}
+        title="Cancel Trade"
+        message="Are you sure you want to cancel this trade? This action cannot be undone."
+        type="warning"
+        confirmText="Yes, cancel it"
+        cancelText="No, keep it"
+      />
     </div>
   );
 };

@@ -542,28 +542,31 @@ const UnifiedRealTimeChart = ({ symbol, type = 'crypto', onPriceUpdate }) => {
 
   return (
     <div className="flex flex-col h-full w-full bg-transparent min-h-[350px] lg:min-h-[400px]">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-3 md:gap-4 p-2 sm:p-3 md:p-4 border-b border-[#2a2d3a]">
-        <div className="flex flex-col gap-1 sm:gap-2">
-          <div className="flex flex-col gap-0.5 sm:gap-1">
-            <span className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-white">${formatPrice(currentPrice)}</span>
-            <span className="text-[10px] sm:text-xs text-gray-400">≈{formatPrice(currentPrice)} USD</span>
-          </div>
-          <div className={`text-[10px] sm:text-xs font-medium ${
+      <div className="flex flex-col gap-3 p-3 sm:p-4 border-b border-[#2a2d3a]">
+        {/* Price Info - Left aligned on all screens */}
+        <div className="flex flex-col gap-1">
+          <span className="text-2xl sm:text-3xl font-bold text-white">{formatPrice(currentPrice)}</span>
+          <span className="text-xs text-gray-400">≈{formatPrice(currentPrice)} USD</span>
+          <div className={`text-xs font-medium ${
             priceChange >= 0 ? 'text-teal-400' : 'text-red-400'
           }`}>
             {priceChange >= 0 ? '+' : ''}{priceChangePercent.toFixed(2)}%
           </div>
         </div>
-        <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 text-[10px] sm:text-xs">
-          <div className="flex flex-col gap-0.5 sm:gap-1">
-            <span className="text-gray-400">24h High:</span>
-            <span className="text-teal-400 font-medium">{formatPrice(stats.high24h)}</span>
+        
+        {/* Stats Row - High and Low on the right on mobile */}
+        <div className="flex justify-between items-center text-xs">
+          <div className="flex gap-4">
+            <div className="flex flex-col gap-0.5">
+              <span className="text-gray-400">24h High:</span>
+              <span className="text-teal-400 font-medium">{formatPrice(stats.high24h)}</span>
+            </div>
+            <div className="flex flex-col gap-0.5">
+              <span className="text-gray-400">24h Low:</span>
+              <span className="text-red-400 font-medium">{formatPrice(stats.low24h)}</span>
+            </div>
           </div>
-          <div className="flex flex-col gap-0.5 sm:gap-1">
-            <span className="text-gray-400">24h Low:</span>
-            <span className="text-red-400 font-medium">{formatPrice(stats.low24h)}</span>
-          </div>
-          <div className="flex flex-col gap-0.5 sm:gap-1">
+          <div className="flex flex-col gap-0.5 text-right">
             <span className="text-gray-400">24h Turnover:</span>
             <span className="text-white font-medium">{(stats.volume24h / 1000000).toFixed(2)}M</span>
           </div>

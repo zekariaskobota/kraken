@@ -78,32 +78,32 @@ const QuickActions = () => {
 
   const quickActions = [
     {
-      icon: <FaArrowDown className="text-green-400" />,
+      icon: <FaArrowDown className="text-teal-400" />,
       label: "Quick Buy",
       action: () => navigate("/trade"),
-      color: "from-green-500/20 to-emerald-500/10",
-      borderColor: "border-green-500/30",
+      color: "bg-gray-700/50",
+      borderColor: "border-gray-700",
     },
     {
-      icon: <FaArrowUp className="text-red-400" />,
+      icon: <FaArrowUp className="text-gray-400" />,
       label: "Quick Sell",
       action: () => navigate("/trade"),
-      color: "from-red-500/20 to-orange-500/10",
-      borderColor: "border-red-500/30",
+      color: "bg-gray-700/50",
+      borderColor: "border-gray-700",
     },
     {
-      icon: <FaExchangeAlt className="text-blue-400" />,
+      icon: <FaExchangeAlt className="text-teal-400" />,
       label: "Trade Now",
       action: () => navigate("/trade"),
-      color: "from-blue-500/20 to-cyan-500/10",
-      borderColor: "border-blue-500/30",
+      color: "bg-gray-700/50",
+      borderColor: "border-gray-700",
     },
   ];
 
   return (
-    <div className="bg-gradient-to-br from-[rgba(26,29,41,0.8)] to-[rgba(11,14,20,0.6)] border border-[#2a2d3a] rounded-2xl p-4 sm:p-6 shadow-xl">
+    <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-4 sm:p-6 shadow-xl">
       <div className="flex items-center gap-2 mb-4">
-        <FaFire className="text-orange-400 text-lg" />
+        <FaFire className="text-teal-400 text-lg" />
         <h3 className="text-base sm:text-lg font-semibold text-white">Quick Actions</h3>
       </div>
 
@@ -113,7 +113,7 @@ const QuickActions = () => {
           <button
             key={index}
             onClick={action.action}
-            className={`flex flex-col items-center gap-2 p-4 rounded-xl bg-gradient-to-br ${action.color} border ${action.borderColor} hover:scale-105 transition-all duration-300`}
+            className={`flex flex-col items-center gap-2 p-4 rounded-xl ${action.color} border ${action.borderColor} hover:border-teal-500/50 hover:scale-105 transition-all duration-300`}
           >
             <div className="text-xl">{action.icon}</div>
             <span className="text-xs font-medium text-white">{action.label}</span>
@@ -125,7 +125,7 @@ const QuickActions = () => {
       {!loading && favoritePairs.length > 0 && (
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <FaStar className="text-yellow-400 text-sm" />
+            <FaStar className="text-teal-400 text-sm" />
             <h4 className="text-xs sm:text-sm font-semibold text-gray-400">Favorite Pairs</h4>
           </div>
           <div className="space-y-2">
@@ -133,10 +133,10 @@ const QuickActions = () => {
               <button
                 key={index}
                 onClick={() => navigate("/trade")}
-                className="w-full flex items-center justify-between p-2 bg-[rgba(11,14,20,0.6)] rounded-lg border border-[#2a2d3a] hover:border-teal-500/50 transition-all duration-300"
+                className="w-full flex items-center justify-between p-2 bg-gray-900/50 rounded-lg border border-gray-700 hover:border-teal-500/50 transition-all duration-300"
               >
                 <span className="text-xs sm:text-sm font-medium text-white">{pair.symbol}</span>
-                <span className={`text-xs font-semibold ${pair.change >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                <span className={`text-xs font-semibold ${pair.change >= 0 ? 'text-teal-400' : 'text-gray-400'}`}>
                   {pair.change >= 0 ? '+' : ''}{pair.change.toFixed(2)}%
                 </span>
               </button>

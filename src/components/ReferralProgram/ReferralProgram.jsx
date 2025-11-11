@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaCopy, FaShareAlt, FaUsers, FaDollarSign, FaGift } from "react-icons/fa";
 import { authAPI } from "../../services/apiService";
-import Swal from "sweetalert2";
+import { showToast } from "../../utils/toast";
 
 const ReferralProgram = () => {
   const [referralCode, setReferralCode] = useState("");
@@ -40,15 +40,7 @@ const ReferralProgram = () => {
 
   const copyReferralCode = () => {
     navigator.clipboard.writeText(referralCode);
-    Swal.fire({
-      icon: "success",
-      title: "Copied!",
-      text: "Referral code copied to clipboard",
-      timer: 1500,
-      showConfirmButton: false,
-      background: "#0f172a",
-      color: "#e5e7eb",
-    });
+    showToast.success("Referral code copied to clipboard");
   };
 
   const shareReferral = () => {
@@ -63,21 +55,13 @@ const ReferralProgram = () => {
       });
     } else {
       navigator.clipboard.writeText(`${shareText} - ${shareUrl}`);
-      Swal.fire({
-        icon: "success",
-        title: "Copied!",
-        text: "Referral link copied to clipboard",
-        timer: 1500,
-        showConfirmButton: false,
-        background: "#0f172a",
-        color: "#e5e7eb",
-      });
+      showToast.success("Referral link copied to clipboard");
     }
   };
 
   if (loading) {
     return (
-      <div className="bg-gradient-to-br from-[rgba(26,29,41,0.8)] to-[rgba(11,14,20,0.6)] border border-[#2a2d3a] rounded-2xl p-4 sm:p-6">
+      <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-4 sm:p-6">
         <div className="animate-pulse space-y-4">
           <div className="h-6 bg-slate-700/50 rounded w-1/3"></div>
           <div className="h-16 bg-slate-700/50 rounded"></div>
@@ -92,7 +76,7 @@ const ReferralProgram = () => {
   }
 
   return (
-    <div className="bg-gradient-to-br from-[rgba(26,29,41,0.8)] to-[rgba(11,14,20,0.6)] border border-[#2a2d3a] rounded-2xl p-4 sm:p-6 shadow-xl">
+    <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-4 sm:p-6 shadow-xl">
       <div className="flex items-center gap-2 mb-4">
         <FaGift className="text-teal-400 text-lg" />
         <h3 className="text-base sm:text-lg font-semibold text-white">Referral Program</h3>
@@ -102,7 +86,7 @@ const ReferralProgram = () => {
       <div className="mb-6">
         <label className="text-xs text-gray-400 mb-2 block">Your Referral Code</label>
         <div className="flex gap-2">
-          <div className="flex-1 flex items-center gap-3 bg-[rgba(11,14,20,0.6)] border border-[#2a2d3a] rounded-lg px-4 py-3">
+          <div className="flex-1 flex items-center gap-3 bg-gray-900/50 border border-gray-700 rounded-lg px-4 py-3">
             <span className="text-lg sm:text-xl font-bold text-teal-400 font-mono">{referralCode}</span>
           </div>
           <button
@@ -113,7 +97,7 @@ const ReferralProgram = () => {
           </button>
           <button
             onClick={shareReferral}
-            className="px-4 py-3 bg-blue-500/20 border border-blue-500/30 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-all duration-300"
+            className="px-4 py-3 bg-gray-700/50 border border-gray-600 text-teal-400 rounded-lg hover:bg-gray-700/70 transition-all duration-300"
           >
             <FaShareAlt />
           </button>
@@ -122,23 +106,23 @@ const ReferralProgram = () => {
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="bg-[rgba(11,14,20,0.6)] rounded-lg p-3 border border-[#2a2d3a]">
+        <div className="bg-gray-900/50 rounded-lg p-3 border border-gray-700">
           <div className="flex items-center gap-2 mb-1">
-            <FaUsers className="text-blue-400 text-sm" />
+            <FaUsers className="text-teal-400 text-sm" />
             <span className="text-xs text-gray-400">Total</span>
           </div>
           <div className="text-base sm:text-lg font-semibold text-white">{stats.totalReferrals}</div>
         </div>
-        <div className="bg-[rgba(11,14,20,0.6)] rounded-lg p-3 border border-[#2a2d3a]">
+        <div className="bg-gray-900/50 rounded-lg p-3 border border-gray-700">
           <div className="flex items-center gap-2 mb-1">
-            <FaUsers className="text-green-400 text-sm" />
+            <FaUsers className="text-teal-400 text-sm" />
             <span className="text-xs text-gray-400">Active</span>
           </div>
           <div className="text-base sm:text-lg font-semibold text-white">{stats.activeReferrals}</div>
         </div>
-        <div className="bg-[rgba(11,14,20,0.6)] rounded-lg p-3 border border-[#2a2d3a]">
+        <div className="bg-gray-900/50 rounded-lg p-3 border border-gray-700">
           <div className="flex items-center gap-2 mb-1">
-            <FaDollarSign className="text-yellow-400 text-sm" />
+            <FaDollarSign className="text-teal-400 text-sm" />
             <span className="text-xs text-gray-400">Earnings</span>
           </div>
           <div className="text-base sm:text-lg font-semibold text-white">

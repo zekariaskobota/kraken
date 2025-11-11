@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import BottomNavigation from "../BottomNavigation/BottomNavigation";
 import config from "../../config";
-import Swal from "sweetalert2";
 import { FaTimes, FaEye, FaBan } from "react-icons/fa";
+import ConfirmPopup from "../ConfirmPopup/ConfirmPopup";
+import { showToast } from "../../utils/toast";
 
 const WithdrawalHistory = () => {
   const [withdrawals, setWithdrawals] = useState([]);
@@ -10,6 +11,7 @@ const WithdrawalHistory = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [withdrawalsPerPage, setWithdrawalsPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
+  const [confirmPopup, setConfirmPopup] = useState({ isOpen: false, withdrawalId: null });
 
   // Fetch withdrawal history data for the logged-in user
   useEffect(() => {
@@ -58,23 +60,19 @@ const WithdrawalHistory = () => {
     indexOfLastWithdrawal
   );
 
-  const handleCancelWithdrawal = async (withdrawalId) => {
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "Do you want to cancel this withdrawal?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, cancel it!",
-    });
+  const handleCancelWithdrawal = (withdrawalId) => {
+    setConfirmPopup({ isOpen: true, withdrawalId });
+  };
 
-    if (!result.isConfirmed) return;
+  const confirmCancelWithdrawal = async () => {
+    const withdrawalId = confirmPopup.withdrawalId;
+    if (!withdrawalId) return;
 
     try {
       const token = localStorage.getItem("token");
       if (!token) {
         console.error("No token found");
+        showToast.error("Authentication required");
         return;
       }
 
@@ -91,21 +89,16 @@ const WithdrawalHistory = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Remove cancelled deposit from state
+        // Remove cancelled withdrawal from state
         setWithdrawals((prev) => prev.filter((dep) => dep._id !== withdrawalId));
-
-        Swal.fire("Cancelled!", "Withdrawal has been cancelled.", "success");
+        showToast.success("Withdrawal has been cancelled successfully");
       } else {
-        console.error("Error cancelling Withdrawal:", data.message);
-        Swal.fire(
-          "Error",
-          data.message || "Failed to cancel Withdrawal.",
-          "error"
-        );
+        console.error("Error cancelling withdrawal:", data.message);
+        showToast.error(data.message || "Failed to cancel withdrawal");
       }
     } catch (error) {
-      console.error("Error cancelling Withdrawal:", error);
-      Swal.fire("Error", "An error occurred. Please try again.", "error");
+      console.error("Error cancelling withdrawal:", error);
+      showToast.error("An error occurred. Please try again");
     }
   };
 
@@ -274,6 +267,18 @@ const WithdrawalHistory = () => {
           </div>
         </div>
       )}
+
+      {/* Confirmation Popup */}
+      <ConfirmPopup
+        isOpen={confirmPopup.isOpen}
+        onClose={() => setConfirmPopup({ isOpen: false, withdrawalId: null })}
+        onConfirm={confirmCancelWithdrawal}
+        title="Cancel Withdrawal"
+        message="Are you sure you want to cancel this withdrawal? This action cannot be undone."
+        type="warning"
+        confirmText="Yes, cancel it"
+        cancelText="No, keep it"
+      />
     </div>
   );
 };

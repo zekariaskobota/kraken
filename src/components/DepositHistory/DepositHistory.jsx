@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import config from "../../config";
-import Swal from "sweetalert2";
 import { FaTimes, FaEye } from "react-icons/fa";
+import ConfirmPopup from "../ConfirmPopup/ConfirmPopup";
+import { showToast } from "../../utils/toast";
 
 const DepositHistory = () => {
   const [deposits, setDeposits] = useState([]);
@@ -11,6 +12,7 @@ const DepositHistory = () => {
   const [depositsPerPage, setDepositsPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [confirmPopup, setConfirmPopup] = useState({ isOpen: false, depositId: null });
 
   const getImageUrl = (filename) => `${config.BACKEND_URL}/uploads/${filename}`;
 
@@ -61,23 +63,19 @@ const DepositHistory = () => {
     indexOfLastDeposit
   );
 
-  const handleCancelDeposit = async (depositId) => {
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "Do you want to cancel this deposit?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, cancel it!",
-    });
+  const handleCancelDeposit = (depositId) => {
+    setConfirmPopup({ isOpen: true, depositId });
+  };
 
-    if (!result.isConfirmed) return;
+  const confirmCancelDeposit = async () => {
+    const depositId = confirmPopup.depositId;
+    if (!depositId) return;
 
     try {
       const token = localStorage.getItem("token");
       if (!token) {
         console.error("No token found");
+        showToast.error("Authentication required");
         return;
       }
 
@@ -96,19 +94,14 @@ const DepositHistory = () => {
       if (response.ok) {
         // Remove cancelled deposit from state
         setDeposits((prev) => prev.filter((dep) => dep._id !== depositId));
-
-        Swal.fire("Cancelled!", "Deposit has been cancelled.", "success");
+        showToast.success("Deposit has been cancelled successfully");
       } else {
         console.error("Error cancelling deposit:", data.message);
-        Swal.fire(
-          "Error",
-          data.message || "Failed to cancel deposit.",
-          "error"
-        );
+        showToast.error(data.message || "Failed to cancel deposit");
       }
     } catch (error) {
       console.error("Error cancelling deposit:", error);
-      Swal.fire("Error", "An error occurred. Please try again.", "error");
+      showToast.error("An error occurred. Please try again");
     }
   };
 
@@ -300,6 +293,18 @@ const DepositHistory = () => {
           </div>
         </div>
       )}
+
+      {/* Confirmation Popup */}
+      <ConfirmPopup
+        isOpen={confirmPopup.isOpen}
+        onClose={() => setConfirmPopup({ isOpen: false, depositId: null })}
+        onConfirm={confirmCancelDeposit}
+        title="Cancel Deposit"
+        message="Are you sure you want to cancel this deposit? This action cannot be undone."
+        type="warning"
+        confirmText="Yes, cancel it"
+        cancelText="No, keep it"
+      />
     </div>
   );
 };

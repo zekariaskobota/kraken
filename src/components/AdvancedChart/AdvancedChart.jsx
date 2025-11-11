@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import BottomNavigation from "../BottomNavigation/BottomNavigation";
 import Navbar from "../Navbar/Navbar";
 import axios from "axios";
-import Swal from 'sweetalert2';
+import { showToast } from '../../utils/toast';
 import UnifiedRealTimeChart from "../Chart/UnifiedRealTimeChart";
 import OrderEntryPanel from "../ModernTrading/OrderEntryPanel";
 
@@ -24,14 +24,8 @@ const AdvancedChart = () => {
 
   useEffect(() => {
     if (!coin) {
-      Swal.fire({
-        icon: 'error',
-        title: 'No Data',
-        text: 'Crypto data not found. Redirecting to home...',
-        confirmButtonColor: '#26a69a',
-      }).then(() => {
-        navigate('/home');
-      });
+      showToast.error("Crypto data not found. Redirecting to home...");
+      navigate('/home');
       return;
     }
 

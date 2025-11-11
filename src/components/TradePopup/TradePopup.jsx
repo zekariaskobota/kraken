@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
 import { FaTimes, FaWallet, FaChartLine } from "react-icons/fa";
 import config from "../../config";
-import Swal from "sweetalert2";
+import showToast from "../../utils/toast";
 
 const TradePopup = ({ cryptoData, isOpen, onClose, tradeType }) => {
   const navigate = useNavigate();
@@ -120,34 +120,13 @@ const TradePopup = ({ cryptoData, isOpen, onClose, tradeType }) => {
   const submitTrade = async () => {
     if (userIdentityStatus !== "Verified") {
       resetTradeState();
-
-      Swal.fire({
-        icon: "error",
-        title: "Action Required",
-        text: "Please verify your identity to trade!",
-        confirmButtonText: "OK",
-        confirmButtonColor: "#26a69a",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate("/real-name-authentication");
-        }
-      });
-
+      showToast.error("Please verify your identity to trade!");
+      setTimeout(() => navigate("/real-name-authentication"), 1500);
       return;
     }
 
     if (tradeAmount > balance) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Insufficient balance',
-        text: 'Please deposit to trade!',
-        toast: true,
-        position: 'top',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-      });
-
+      showToast.error("Insufficient balance. Please deposit to trade!");
       resetTradeState();
       return;
     }
@@ -157,52 +136,24 @@ const TradePopup = ({ cryptoData, isOpen, onClose, tradeType }) => {
     );
 
     if (!selectedExpiration) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid expiration option selected.',
-        toast: true,
-        position: 'top',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-      });
+      showToast.error("Invalid expiration option selected");
       return;
     }
 
     if (tradeAmount < selectedExpiration.minTradeAmount) {
-      Swal.fire({
-        icon: 'error',
-        title: `Trade amount must be at least $${selectedExpiration.minTradeAmount}`,
-        toast: true,
-        position: 'top',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-      });
+      showToast.error(`Trade amount must be at least ${selectedExpiration.minTradeAmount} USD`);
       return;
     }
 
     if (tradeAmount > selectedExpiration.maxTradeAmount) {
-      Swal.fire({
-        icon: 'error',
-        title: `Trade amount cannot exceed $${selectedExpiration.maxTradeAmount}`,
-        toast: true,
-        position: 'top',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-      });
+      showToast.error(`Trade amount cannot exceed ${selectedExpiration.maxTradeAmount} USD`);
       return;
     }
 
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'User is not authenticated.',
-          confirmButtonColor: '#f59e0b',
-        });
+        showToast.warning("User is not authenticated");
         return;
       }
       let winLose = "Lose"; 
@@ -262,36 +213,14 @@ const TradePopup = ({ cryptoData, isOpen, onClose, tradeType }) => {
           // Error handling
         }
 
-        Swal.fire({
-          icon: 'success',
-          title: 'Trade submitted successfully.',
-          position: 'top',
-          showConfirmButton: true,
-          timer: 3000,
-          timerProgressBar: true,
-        });
-
+        showToast.success("Trade submitted successfully!");
         resetTradeState();
         onClose();
       } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Failed to submit trade data.',
-          position: 'top',
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-        });
+        showToast.error("Failed to submit trade");
       }
     } catch (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error submitting trade data.',
-        position: 'top',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-      });
+      showToast.error("Error submitting trade");
     }
   };
 
@@ -335,7 +264,7 @@ const TradePopup = ({ cryptoData, isOpen, onClose, tradeType }) => {
               {tradeType === "Buy" ? "Buy" : "Sell"} {cryptoData.name}
             </h2>
             <p className="text-xs sm:text-sm md:text-base text-gray-400">
-              ${cryptoData?.current_price ? cryptoData.current_price.toFixed(2) : cryptoData?.symbol}
+              <span className="text-[10px] sm:text-xs opacity-60">USD</span> {cryptoData?.current_price ? cryptoData.current_price.toFixed(2) : cryptoData?.symbol}
             </p>
           </div>
           <button 
@@ -352,7 +281,7 @@ const TradePopup = ({ cryptoData, isOpen, onClose, tradeType }) => {
             <FaWallet className="text-teal-400 bg-teal-500/15 w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center text-base sm:text-lg" />
             <div className="flex flex-col gap-1 flex-1">
               <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wide">Available Balance</span>
-              <span className="text-base sm:text-lg md:text-xl font-bold text-white">${balance.toFixed(2)}</span>
+              <span className="text-base sm:text-lg md:text-xl font-bold text-white"><span className="text-xs opacity-60">USD</span> {balance.toFixed(2)}</span>
             </div>
           </div>
         </div>
@@ -423,12 +352,12 @@ const TradePopup = ({ cryptoData, isOpen, onClose, tradeType }) => {
             <div className="bg-[rgba(26,29,41,0.6)] border border-[#2a2d3a] rounded-xl p-3 sm:p-4 flex items-center gap-3 sm:gap-4">
               <div className="flex-1 flex flex-col gap-1">
                 <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wide">Minimum</span>
-                <span className="text-sm sm:text-base font-semibold text-white">${selectedExpiration.minTradeAmount.toLocaleString()}</span>
+                <span className="text-sm sm:text-base font-semibold text-white"><span className="text-xs opacity-60">USD</span> {selectedExpiration.minTradeAmount.toLocaleString()}</span>
               </div>
               <div className="w-px h-10 bg-[#2a2d3a]"></div>
               <div className="flex-1 flex flex-col gap-1">
                 <span className="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wide">Maximum</span>
-                <span className="text-sm sm:text-base font-semibold text-white">${selectedExpiration.maxTradeAmount.toLocaleString()}</span>
+                <span className="text-sm sm:text-base font-semibold text-white"><span className="text-xs opacity-60">USD</span> {selectedExpiration.maxTradeAmount.toLocaleString()}</span>
               </div>
             </div>
           </div>
@@ -463,7 +392,7 @@ const TradePopup = ({ cryptoData, isOpen, onClose, tradeType }) => {
           <div className="mb-4 sm:mb-6">
             <div className="bg-teal-500/10 border border-teal-500/30 rounded-xl p-4 sm:p-5 flex justify-between items-center">
               <span className="text-xs sm:text-sm text-gray-400 font-medium">Estimated Income</span>
-              <span className="text-lg sm:text-xl md:text-2xl font-bold text-teal-400">+${estimatedIncome}</span>
+              <span className="text-lg sm:text-xl md:text-2xl font-bold text-teal-400">+<span className="text-sm opacity-60">USD</span> {estimatedIncome}</span>
             </div>
           </div>
         )}

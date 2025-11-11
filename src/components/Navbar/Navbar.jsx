@@ -1,46 +1,103 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FaGlobe, FaCog, FaWallet, FaSignOutAlt, FaChevronDown, FaBell, FaCheckCircle, FaExclamationCircle, FaInfoCircle, FaTimes } from "react-icons/fa";
-import Swal from "sweetalert2";
+import { FaGlobe, FaCog, FaSignOutAlt, FaBell, FaCheckCircle, FaExclamationCircle, FaInfoCircle, FaTimes } from "react-icons/fa";
 import Logo from "../Logo/Logo";
+import ConfirmPopup from "../ConfirmPopup/ConfirmPopup";
 import { tradesAPI, depositsAPI, withdrawalsAPI, identityAPI } from "../../services/apiService";
 
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
-  const dropdownRef = useRef(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const notificationRef = useRef(null);
 
-  // Close dropdowns when clicking outside
+  // Check if user is logged in
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+    
+    // Listen for storage changes
+    const handleStorageChange = () => {
+      const newToken = localStorage.getItem("token");
+      setIsLoggedIn(!!newToken);
+    };
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
+
+  // Handle navigation with auth check
+  const handleNavigation = (path) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    } else {
+      navigate(path);
+    }
+  };
+
+  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
       if (notificationRef.current && !notificationRef.current.contains(event.target)) {
         setIsNotificationOpen(false);
       }
     };
 
-    if (isDropdownOpen || isNotificationOpen) {
+    if (isNotificationOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isDropdownOpen, isNotificationOpen]);
+  }, [isNotificationOpen]);
 
   // Fetch notifications
   useEffect(() => {
     fetchNotifications();
     const interval = setInterval(fetchNotifications, 30000); // Refresh every 30 seconds
-    return () => clearInterval(interval);
+    
+    // Listen for storage changes (when notifications are marked as read)
+    const handleStorageChange = () => {
+      loadNotificationsFromStorage();
+    };
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Also check on focus
+    const handleFocus = () => {
+      loadNotificationsFromStorage();
+    };
+    window.addEventListener('focus', handleFocus);
+    
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('focus', handleFocus);
+    };
   }, []);
+
+  const loadNotificationsFromStorage = () => {
+    const stored = localStorage.getItem('notifications');
+    if (stored) {
+      try {
+        const storedNotifications = JSON.parse(stored);
+        const sortedNotifications = storedNotifications
+          .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+          .slice(0, 5);
+        setNotifications(sortedNotifications);
+        setUnreadCount(storedNotifications.filter((n) => !n.read).length);
+      } catch (error) {
+        console.error('Error loading notifications from storage:', error);
+      }
+    }
+  };
 
   const fetchNotifications = async () => {
     try {
@@ -169,13 +226,35 @@ const Navbar = () => {
         }
       });
 
-      // Sort by timestamp (newest first) and limit to 5
-      const sortedNotifications = generatedNotifications
-        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-        .slice(0, 5);
+      // Sort by timestamp (newest first)
+      const sortedNotifications = generatedNotifications.sort(
+        (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+      );
 
-      setNotifications(sortedNotifications);
-      setUnreadCount(sortedNotifications.filter((n) => !n.read).length);
+      // Check localStorage for existing read status
+      const stored = localStorage.getItem('notifications');
+      let finalNotifications = sortedNotifications;
+      
+      if (stored) {
+        try {
+          const storedNotifications = JSON.parse(stored);
+          // Merge with stored read status
+          finalNotifications = sortedNotifications.map(newNotif => {
+            const stored = storedNotifications.find(s => s.id === newNotif.id);
+            return stored ? { ...newNotif, read: stored.read } : newNotif;
+          });
+        } catch (error) {
+          console.error('Error parsing stored notifications:', error);
+        }
+      }
+
+      // Save all to localStorage
+      localStorage.setItem('notifications', JSON.stringify(finalNotifications));
+
+      // Set only top 5 for navbar display
+      const displayNotifications = finalNotifications.slice(0, 5);
+      setNotifications(displayNotifications);
+      setUnreadCount(finalNotifications.filter((n) => !n.read).length);
     } catch (error) {
       console.error("Error fetching notifications:", error);
       setNotifications([]);
@@ -188,11 +267,37 @@ const Navbar = () => {
       prev.map((n) => (n.id === id ? { ...n, read: true } : n))
     );
     setUnreadCount((prev) => Math.max(0, prev - 1));
+    
+    // Update localStorage
+    const stored = localStorage.getItem('notifications');
+    if (stored) {
+      try {
+        const storedNotifications = JSON.parse(stored);
+        const updated = storedNotifications.map(n => 
+          n.id === id ? { ...n, read: true } : n
+        );
+        localStorage.setItem('notifications', JSON.stringify(updated));
+      } catch (error) {
+        console.error('Error updating localStorage:', error);
+      }
+    }
   };
 
   const markAllAsRead = () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
     setUnreadCount(0);
+    
+    // Update localStorage
+    const stored = localStorage.getItem('notifications');
+    if (stored) {
+      try {
+        const storedNotifications = JSON.parse(stored);
+        const updated = storedNotifications.map(n => ({ ...n, read: true }));
+        localStorage.setItem('notifications', JSON.stringify(updated));
+      } catch (error) {
+        console.error('Error updating localStorage:', error);
+      }
+    }
   };
 
   const deleteNotification = (id) => {
@@ -231,34 +336,12 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    Swal.fire({
-      title: 'Sign Out',
-      text: 'Are you sure you want to sign out?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#ef4444',
-      cancelButtonColor: '#6b7280',
-      confirmButtonText: 'Yes, sign out',
-      cancelButtonText: 'Cancel',
-      background: '#0f172a',
-      color: '#e5e7eb',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        localStorage.removeItem("token");
-        navigate("/login");
-      }
-    });
-    setIsDropdownOpen(false);
+    setShowLogoutConfirm(true);
   };
 
-  const handleSettings = () => {
-    navigate("/profile?section=settings");
-    setIsDropdownOpen(false);
-  };
-
-  const handleAssets = () => {
-    navigate("/profile?section=assets");
-    setIsDropdownOpen(false);
+  const confirmLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
   };
 
   return (
@@ -268,8 +351,8 @@ const Navbar = () => {
         <Logo size="default" showText={true} />
 
         <div className="hidden md:flex gap-2 items-center">
-          <Link
-            to="/home"
+          <button
+            onClick={() => handleNavigation("/home")}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 relative ${
               location.pathname === "/home"
                 ? "text-teal-400 bg-teal-500/15"
@@ -280,9 +363,9 @@ const Navbar = () => {
             {location.pathname === "/home" && (
               <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[60%] h-0.5 bg-gradient-to-r from-teal-400 to-cyan-400 rounded-full"></span>
             )}
-          </Link>
-          <Link
-            to="/trade"
+          </button>
+          <button
+            onClick={() => handleNavigation("/trade")}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 relative ${
               location.pathname === "/trade"
                 ? "text-teal-400 bg-teal-500/15"
@@ -293,9 +376,9 @@ const Navbar = () => {
             {location.pathname === "/trade" && (
               <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[60%] h-0.5 bg-gradient-to-r from-teal-400 to-cyan-400 rounded-full"></span>
             )}
-          </Link>
-          <Link
-            to="/market"
+          </button>
+          <button
+            onClick={() => handleNavigation("/market")}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 relative ${
               location.pathname === "/market"
                 ? "text-teal-400 bg-teal-500/15"
@@ -306,9 +389,9 @@ const Navbar = () => {
             {location.pathname === "/market" && (
               <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[60%] h-0.5 bg-gradient-to-r from-teal-400 to-cyan-400 rounded-full"></span>
             )}
-          </Link>
-          <Link
-            to="/news"
+          </button>
+          <button
+            onClick={() => handleNavigation("/news")}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 relative ${
               location.pathname === "/news"
                 ? "text-teal-400 bg-teal-500/15"
@@ -319,30 +402,51 @@ const Navbar = () => {
             {location.pathname === "/news" && (
               <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[60%] h-0.5 bg-gradient-to-r from-teal-400 to-cyan-400 rounded-full"></span>
             )}
-          </Link>
-          <Link
-            to="/demo"
+          </button>
+          <button
+            onClick={() => handleNavigation("/profile")}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 relative ${
-              location.pathname === "/demo"
+              location.pathname === "/profile"
                 ? "text-teal-400 bg-teal-500/15"
                 : "text-gray-400 hover:text-white hover:bg-teal-500/10"
             }`}
           >
-            Demo
-            {location.pathname === "/demo" && (
+            Assets
+            {location.pathname === "/profile" && (
               <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[60%] h-0.5 bg-gradient-to-r from-teal-400 to-cyan-400 rounded-full"></span>
             )}
-          </Link>
+          </button>
         </div>
       </div>
 
-      {/* Right Section - Notifications, Profile */}
+      {/* Right Section - Settings, Notifications, Profile */}
       <div className="flex items-center gap-3 md:gap-4">
+        {/* Settings Icon */}
+        <button
+          onClick={() => handleNavigation("/settings")}
+          className="p-2 rounded-lg bg-transparent hover:bg-teal-500/10 transition-all duration-300 group"
+        >
+          <FaCog className="text-teal-400 text-lg group-hover:scale-110 transition-transform" />
+        </button>
+
         {/* Notification Icon */}
         <div className="relative" ref={notificationRef}>
           <button
-            onClick={() => setIsNotificationOpen(!isNotificationOpen)}
-            className="relative p-2 rounded-lg bg-teal-500/10 border border-teal-500/30 hover:bg-teal-500/20 hover:border-teal-500/50 transition-all duration-300 group"
+            onClick={() => {
+              const token = localStorage.getItem("token");
+              if (!token) {
+                navigate("/login");
+                return;
+              }
+              // On mobile, navigate to notification page
+              if (window.innerWidth < 768) {
+                navigate("/notifications");
+              } else {
+                // On desktop, toggle dropdown
+                setIsNotificationOpen(!isNotificationOpen);
+              }
+            }}
+            className="relative p-2 rounded-lg bg-transparent hover:bg-teal-500/10 transition-all duration-300 group"
           >
             <FaBell className="text-teal-400 text-lg group-hover:scale-110 transition-transform" />
             {unreadCount > 0 && (
@@ -413,59 +517,44 @@ const Navbar = () => {
                   ))
                 )}
               </div>
+              {/* View All Button */}
+              {notifications.length > 0 && (
+                <div className="p-3 border-t border-[rgba(42,45,58,0.8)]">
+                  <button
+                    onClick={() => {
+                      navigate("/notifications");
+                      setIsNotificationOpen(false);
+                    }}
+                    className="w-full py-2 text-center text-sm text-teal-400 hover:text-teal-300 font-medium transition-colors"
+                  >
+                    View All Notifications
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
 
-        {/* Profile Dropdown */}
-        <div className="relative" ref={dropdownRef}>
-          <button
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center gap-2 group"
-          >
-            <img
-              src="/profile.png"
-              alt="Profile"
-              className="h-9 w-9 md:h-10 md:w-10 rounded-full cursor-pointer border-2 border-transparent transition-all duration-300 object-cover group-hover:border-teal-400 group-hover:scale-110"
-            />
-            <FaChevronDown
-              className={`text-gray-400 text-xs transition-transform duration-300 ${
-                isDropdownOpen ? "rotate-180" : ""
-              }`}
-            />
-          </button>
-
-          {/* Dropdown Menu */}
-          {isDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-gradient-to-br from-[#0b0e14] to-[#1a1d29] border border-[rgba(42,45,58,0.8)] rounded-xl shadow-2xl overflow-hidden z-50 backdrop-blur-xl">
-              <div className="py-1">
-                <button
-                  onClick={handleSettings}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-300 hover:bg-teal-500/10 hover:text-teal-400 transition-all duration-200 transition-colors"
-                >
-                  <FaCog className="text-base" />
-                  <span>Settings</span>
-                </button>
-                <button
-                  onClick={handleAssets}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-300 hover:bg-teal-500/10 hover:text-teal-400 transition-all duration-200 transition-colors"
-                >
-                  <FaWallet className="text-base" />
-                  <span>Assets</span>
-                </button>
-                <div className="border-t border-[rgba(42,45,58,0.8)] my-1"></div>
-                <button
-                  onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-all duration-200 transition-colors"
-                >
-                  <FaSignOutAlt className="text-base" />
-                  <span>Logout</span>
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
+        {/* Logout Icon */}
+        <button
+          onClick={handleLogout}
+          className="p-2 rounded-lg bg-transparent hover:bg-red-500/10 transition-all duration-300 group"
+        >
+          <FaSignOutAlt className="text-red-400 text-lg group-hover:scale-110 transition-transform" />
+        </button>
       </div>
+
+      {/* Logout Confirmation Popup */}
+      <ConfirmPopup
+        isOpen={showLogoutConfirm}
+        onClose={() => setShowLogoutConfirm(false)}
+        onConfirm={confirmLogout}
+        title="Sign Out"
+        message="Are you sure you want to sign out?"
+        type="info"
+        confirmText="Yes, sign out"
+        cancelText="Cancel"
+      />
     </nav>
   );
 };
