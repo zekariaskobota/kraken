@@ -368,14 +368,14 @@ const LandingPage = () => {
         </div>
 
         {/* Right Section - Auth Buttons */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Link to="/login">
-            <button className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors">
+            <button className="px-5 py-2.5 sm:px-4 sm:py-2 text-base sm:text-sm font-medium text-gray-300 hover:text-white transition-colors">
               Log In
             </button>
           </Link>
           <Link to="/register">
-            <button className="px-6 py-2 text-sm font-semibold text-white bg-teal-500 hover:bg-teal-600 rounded-lg transition-all duration-300">
+            <button className="px-6 py-2.5 sm:px-6 sm:py-2 text-base sm:text-sm font-semibold text-white bg-teal-500 hover:bg-teal-600 rounded-lg transition-all duration-300">
               Sign Up
             </button>
           </Link>
