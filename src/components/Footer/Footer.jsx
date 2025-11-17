@@ -30,12 +30,12 @@ const Footer = () => {
 
           {/* Quick Links Column */}
           <div>
-            <h3 className="text-teal-400 font-bold text-sm mb-4">Quick Links</h3>
-            <ul className="space-y-2">
+            <h3 className="text-teal-400 font-bold text-xl sm:text-lg mb-3 sm:mb-4">Quick Links</h3>
+            <ul className="space-y-1.5 sm:space-y-2">
               <li>
                 <button
                   onClick={() => handleNavigation("/trade")}
-                  className="text-gray-300 text-sm hover:text-teal-400 transition-colors text-left"
+                  className="text-gray-300 text-base sm:text-base hover:text-teal-400 transition-colors text-left py-1"
                 >
                   Trade
                 </button>
@@ -43,7 +43,7 @@ const Footer = () => {
               <li>
                 <button
                   onClick={() => handleNavigation("/market")}
-                  className="text-gray-300 text-sm hover:text-teal-400 transition-colors text-left"
+                  className="text-gray-300 text-base sm:text-base hover:text-teal-400 transition-colors text-left py-1"
                 >
                   Market
                 </button>
@@ -51,13 +51,13 @@ const Footer = () => {
               <li>
                 <button
                   onClick={() => handleNavigation("/news")}
-                  className="text-gray-300 text-sm hover:text-teal-400 transition-colors text-left"
+                  className="text-gray-300 text-base sm:text-base hover:text-teal-400 transition-colors text-left py-1"
                 >
                   News
                 </button>
               </li>
               <li>
-                <Link to="/help-center" className="text-gray-300 text-sm hover:text-teal-400 transition-colors">
+                <Link to="/help-center" className="text-gray-300 text-base sm:text-base hover:text-teal-400 transition-colors py-1 block">
                   Help Center
                 </Link>
               </li>
@@ -66,12 +66,12 @@ const Footer = () => {
 
           {/* Services Column */}
           <div>
-            <h3 className="text-teal-400 font-bold text-sm mb-4">Services</h3>
-            <ul className="space-y-2">
+            <h3 className="text-teal-400 font-bold text-xl sm:text-lg mb-3 sm:mb-4">Services</h3>
+            <ul className="space-y-1.5 sm:space-y-2">
               <li>
                 <button
                   onClick={() => handleNavigation("/deposit")}
-                  className="text-gray-300 text-sm hover:text-teal-400 transition-colors text-left"
+                  className="text-gray-300 text-base sm:text-base hover:text-teal-400 transition-colors text-left py-1"
                 >
                   Deposit
                 </button>
@@ -79,7 +79,7 @@ const Footer = () => {
               <li>
                 <button
                   onClick={() => handleNavigation("/withdraw")}
-                  className="text-gray-300 text-sm hover:text-teal-400 transition-colors text-left"
+                  className="text-gray-300 text-base sm:text-base hover:text-teal-400 transition-colors text-left py-1"
                 >
                   Withdraw
                 </button>
@@ -87,7 +87,7 @@ const Footer = () => {
               <li>
                 <button
                   onClick={() => handleNavigation("/settings?section=identity")}
-                  className="text-gray-300 text-sm hover:text-teal-400 transition-colors text-left"
+                  className="text-gray-300 text-base sm:text-base hover:text-teal-400 transition-colors text-left py-1"
                 >
                   Identity Verification
                 </button>
@@ -95,7 +95,7 @@ const Footer = () => {
               <li>
                 <button
                   onClick={() => handleNavigation("/trade-history")}
-                  className="text-gray-300 text-sm hover:text-teal-400 transition-colors text-left"
+                  className="text-gray-300 text-base sm:text-base hover:text-teal-400 transition-colors text-left py-1"
                 >
                   Trade History
                 </button>
@@ -105,16 +105,16 @@ const Footer = () => {
         </div>
 
         {/* Copyright Section */}
-        <div className="border-t border-gray-700 pt-6 mt-8">
-          <div className="flex flex-col md:flex-row justify-center items-center gap-2 text-gray-400 text-xs">
+        <div className="border-t border-gray-700 pt-4 sm:pt-6 mt-6 sm:mt-8">
+          <div className="flex flex-col md:flex-row justify-center items-center gap-2 text-gray-400 text-sm sm:text-xs">
             <span>© 2018-{currentYear} Kraken.com. All rights reserved.</span>
             <span className="hidden md:inline">|</span>
-            <div className="flex gap-4">
-              <Link to="/terms-of-service" className="hover:text-teal-400 transition-colors">
+            <div className="flex gap-3 sm:gap-4">
+              <Link to="/terms-of-service" className="text-sm sm:text-xs hover:text-teal-400 transition-colors">
                 Terms of Service
               </Link>
               <span>|</span>
-              <Link to="/privacy-policy" className="hover:text-teal-400 transition-colors">
+              <Link to="/privacy-policy" className="text-sm sm:text-xs hover:text-teal-400 transition-colors">
                 Privacy Terms
               </Link>
             </div>

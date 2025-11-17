@@ -370,17 +370,17 @@ const LandingPage = () => {
         {/* Right Section - Auth Buttons */}
         <div className="flex items-center gap-2 sm:gap-3">
           <Link to="/login">
-            <button className="px-5 py-2.5 sm:px-4 sm:py-2 text-base sm:text-sm font-medium text-gray-300 hover:text-white transition-colors">
+            <button className="px-4 py-2 sm:px-5 sm:py-2.5 text-base sm:text-sm font-medium text-gray-300 hover:text-white transition-colors">
               Log In
             </button>
           </Link>
           <Link to="/register">
-            <button className="px-6 py-2.5 sm:px-6 sm:py-2 text-base sm:text-sm font-semibold text-white bg-teal-500 hover:bg-teal-600 rounded-lg transition-all duration-300">
+            <button className="px-6 py-2.5 sm:px-8 sm:py-3 text-base sm:text-sm font-semibold text-white bg-teal-500 hover:bg-teal-600 rounded-lg transition-all duration-300">
               Sign Up
             </button>
           </Link>
-          <button className="p-2 text-gray-400 hover:text-white transition-colors">
-            <FaGlobe className="text-lg" />
+          <button className="p-2 sm:p-2.5 text-gray-400 hover:text-white transition-colors">
+            <FaGlobe className="text-lg sm:text-xl" />
           </button>
         </div>
       </nav>
@@ -395,54 +395,32 @@ const LandingPage = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-              className="space-y-6 order-2 lg:order-1"
+              className="space-y-3 sm:space-y-4 md:space-y-6 order-2 lg:order-1 mt-8 sm:mt-0 text-center sm:text-left"
             >
-              {/* Headline */}
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
-                Experience Real Amazing Profit
-              </h2>
-              
               {/* Sub-headline */}
-              <p className="text-2xl md:text-3xl font-bold text-teal-400">
+              <p className="text-4xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-teal-400">
                 Start Your Trading Journey Today!
               </p>
 
               {/* Offer Details */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center sm:justify-start gap-3">
                 <FaGift className="text-amber-500 text-2xl" />
                 <p className="text-white text-base md:text-lg">
                   Sign Up to Unlock Amazing Trading Opportunities
                 </p>
               </div>
 
-              {/* Input and Button */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                <input
-                  type="text"
-                  placeholder="Email/Mobile Number"
-                  className="flex-1 px-4 py-4 rounded-lg bg-gray-800 text-white placeholder-gray-500 border border-gray-700 focus:outline-none focus:border-teal-500 transition-colors"
-                />
-              <Link to="/register">
-                  <button className="w-full sm:w-auto px-8 py-4 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-semibold transition-all duration-300 shadow-lg shadow-teal-500/30 hover:shadow-xl hover:shadow-teal-500/40 flex items-center justify-center gap-2">
+              {/* Sign Up Button and Demo Link */}
+              <div className="flex flex-row items-center justify-center sm:justify-start gap-3 sm:gap-4 flex-wrap">
+                <Link to="/register">
+                  <button className="px-4 py-2 sm:px-6 sm:py-3 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-semibold text-xs sm:text-sm transition-all duration-300 shadow-lg shadow-teal-500/30 hover:shadow-xl hover:shadow-teal-500/40 flex items-center justify-center gap-2 whitespace-nowrap">
                     Sign Up Now <FaArrowRight />
                   </button>
-              </Link>
+                </Link>
+                <Link to="/demo" className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg bg-white/10 border border-white/30 hover:border-white/50 hover:bg-white/15 text-white hover:text-teal-400 transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap inline-block">
+                  Try Demo Trading Now <FaArrowRight className="inline ml-1" />
+                </Link>
               </div>
-
-              {/* Social Login */}
-              <div className="flex items-center gap-4">
-                <span className="text-gray-400 text-sm">Or Use</span>
-                <div className="flex gap-3">
-                  <button className="w-12 h-12 rounded-lg bg-white/10 hover:bg-white/20 border border-gray-700 flex items-center justify-center transition-all duration-300">
-                    <FaGoogle className="text-white text-xl" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Demo Trading Link */}
-              <Link to="/demo" className="inline-block text-white hover:text-teal-400 transition-colors text-sm md:text-base">
-                Try Demo Trading Now <FaArrowRight className="inline ml-1" />
-              </Link>
           </motion.div>
 
             {/* Right Side - 3D Graphic with BTC overlay */}
@@ -451,7 +429,7 @@ const LandingPage = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="relative h-96 lg:h-[500px] flex items-center justify-center order-1 lg:order-2"
+              className="relative h-64 sm:h-80 md:h-96 lg:h-[500px] flex items-center justify-center order-1 lg:order-2"
             >
               {/* Animated Piggy Bank Graphic with Pendulum Effect */}
               <div className="relative w-full h-full">
@@ -465,7 +443,7 @@ const LandingPage = () => {
                     repeat: Infinity,
                     ease: "easeInOut",
                   }}
-                  className="absolute top-6 md:top-8 lg:top-10 left-1/2 transform -translate-x-1/2"
+                  className="absolute top-4 sm:top-6 md:top-8 lg:top-10 left-1/2 transform -translate-x-1/2"
                   style={{
                     transformOrigin: 'top center',
                   }}
@@ -481,17 +459,17 @@ const LandingPage = () => {
                         repeat: Infinity,
                         ease: "easeInOut",
                       }}
-                      className="w-0.5 h-40 md:h-48 lg:h-56 bg-gradient-to-t from-teal-400 to-teal-500/50"
+                      className="w-0.5 h-28 sm:h-36 md:h-48 lg:h-56 bg-gradient-to-t from-teal-400 to-teal-500/50"
                     ></motion.div>
                     {/* Top Cap (small horizontal dash) */}
                     <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gray-400/70 rounded"></div>
                   </div>
 
                   {/* Main Piggy Bank */}
-                  <div className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 mt-40 md:mt-48 lg:mt-56">
+                  <div className="relative w-48 h-48 sm:w-56 sm:h-56 md:w-80 md:h-80 lg:w-96 lg:h-96 mt-28 sm:mt-36 md:mt-48 lg:mt-56">
                     {/* Piggy Bank Body */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="relative w-48 h-56 md:w-60 md:h-72 lg:w-72 lg:h-80">
+                      <div className="relative w-36 h-44 sm:w-44 sm:h-52 md:w-60 md:h-72 lg:w-72 lg:h-80">
                         {/* Metallic Gradient Body */}
                         <div className="absolute inset-0 rounded-full bg-gradient-to-br from-gray-600 via-teal-500 to-cyan-500 opacity-80 shadow-2xl">
                           <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-white/20 to-transparent"></div>
@@ -565,7 +543,7 @@ const LandingPage = () => {
                         className="relative"
                       >
                         <div className="absolute -inset-6 bg-teal-400/20 blur-2xl rounded-full"></div>
-                        <FaBitcoin className="relative text-[6rem] md:text-[7rem] lg:text-[8rem] text-yellow-400 drop-shadow-xl" />
+                        <FaBitcoin className="relative text-7xl sm:text-6xl md:text-[7rem] lg:text-[8rem] text-yellow-400 drop-shadow-xl" />
                       </motion.div>
                     </div>
                   </div>
@@ -581,11 +559,11 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
+            <h2 className="text-xl md:text-3xl lg:text-4xl font-semibold text-gray-400">
               Catch Your Next Trading Opportunity
             </h2>
             <Link to="/market">
-              <button className="px-6 py-3 rounded-lg bg-teal-500 hover:bg-teal-600 text-white font-semibold transition-all duration-300 flex items-center gap-2">
+              <button className="px-4 py-2 sm:px-6 sm:py-3 rounded-lg bg-teal-500 hover:bg-teal-600 text-white font-semibold text-xs sm:text-sm transition-all duration-300 flex items-center gap-2">
                 Market Overview <FaArrowRight />
               </button>
             </Link>
@@ -598,7 +576,7 @@ const LandingPage = () => {
               <div className="flex gap-4 mb-6 border-b border-gray-700">
                 <button
                   onClick={() => setActiveTab("hotCoins")}
-                  className={`pb-3 px-2 font-semibold transition-colors ${
+                  className={`pb-2 sm:pb-3 px-2 text-xs sm:text-sm font-semibold transition-colors ${
                     activeTab === "hotCoins"
                       ? "text-teal-400 border-b-2 border-teal-400"
                       : "text-gray-400 hover:text-white"
@@ -608,7 +586,7 @@ const LandingPage = () => {
                 </button>
                 <button
                   onClick={() => setActiveTab("hotDerivatives")}
-                  className={`pb-3 px-2 font-semibold transition-colors ${
+                  className={`pb-2 sm:pb-3 px-2 text-xs sm:text-sm font-semibold transition-colors ${
                     activeTab === "hotDerivatives"
                       ? "text-teal-400 border-b-2 border-teal-400"
                       : "text-gray-400 hover:text-white"
@@ -659,7 +637,7 @@ const LandingPage = () => {
                           </td>
                           <td className="py-4 text-center">
                             <Link to="/trade">
-                              <button className="px-4 py-1.5 rounded-lg bg-teal-500 hover:bg-teal-600 text-white text-xs font-semibold transition-all duration-300">
+                              <button className="px-3 py-1 sm:px-4 sm:py-1.5 rounded-lg bg-teal-500 hover:bg-teal-600 text-white text-[10px] sm:text-xs font-semibold transition-all duration-300">
                                 Trade
                               </button>
                             </Link>
@@ -676,7 +654,7 @@ const LandingPage = () => {
             <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-6">
               {/* Top Gainers */}
               <div className="mb-6">
-                <h3 className="text-lg font-bold text-white mb-4">Top Gainers</h3>
+                <h3 className="text-lg font-semibold text-gray-400 mb-4">Top Gainers</h3>
                 {loading ? (
                   <div className="space-y-3">
                     {[1, 2, 3].map((i) => (
@@ -712,7 +690,7 @@ const LandingPage = () => {
 
               {/* New Listings */}
               <div>
-                <h3 className="text-lg font-bold text-white mb-4">New Listings</h3>
+                <h3 className="text-lg font-semibold text-gray-400 mb-4">New Listings</h3>
                 {loading ? (
                   <div className="space-y-3">
                     {[1, 2, 3].map((i) => (
@@ -748,7 +726,7 @@ const LandingPage = () => {
           {/* Footer CTA */}
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-6 bg-gray-800/50 border border-gray-700 rounded-2xl">
             <Link to="/register" className="w-full md:w-auto">
-              <button className="w-full md:w-auto px-8 py-3 rounded-lg bg-teal-500 hover:bg-teal-600 text-white font-semibold transition-all duration-300 flex items-center justify-center gap-2">
+              <button className="w-full md:w-auto px-5 py-2 sm:px-8 sm:py-3 rounded-lg bg-teal-500 hover:bg-teal-600 text-white font-semibold text-xs sm:text-sm transition-all duration-300 flex items-center justify-center gap-2">
                 Get Started <FaArrowRight />
               </button>
             </Link>
@@ -761,11 +739,11 @@ const LandingPage = () => {
         {/* Floating Support Button */}
         <div className="fixed bottom-6 right-6 z-50">
           <button
-            className="w-14 h-14 rounded-full bg-teal-500 hover:bg-teal-600 text-white flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg shadow-teal-500/50"
+            className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-teal-500 hover:bg-teal-600 text-white flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg shadow-teal-500/50"
             onClick={() => setIsChatOpen(true)}
             aria-label="Support"
           >
-            <FaHeadphones className="text-xl" />
+            <FaHeadphones className="text-lg sm:text-xl" />
           </button>
         </div>
 
@@ -784,7 +762,7 @@ const LandingPage = () => {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-gray-400 mb-4">
               Get Started in 30 Seconds!
             </h2>
           </motion.div>
@@ -812,7 +790,7 @@ const LandingPage = () => {
               </div>
 
               {/* Title */}
-              <h3 className="text-xl md:text-2xl font-bold text-white mb-4 text-center">
+              <h3 className="text-xl md:text-2xl font-semibold text-gray-400 mb-4 text-center">
                 Create Account
               </h3>
 
@@ -823,7 +801,7 @@ const LandingPage = () => {
 
               {/* Button */}
               <Link to="/register" className="block">
-                <button className="w-full px-6 py-3 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-semibold transition-all duration-300 shadow-lg shadow-teal-500/30 hover:shadow-xl hover:shadow-teal-500/40">
+                <button className="w-full px-4 py-2 sm:px-6 sm:py-3 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-semibold text-xs sm:text-sm transition-all duration-300 shadow-lg shadow-teal-500/30 hover:shadow-xl hover:shadow-teal-500/40">
                   Sign Up Now
                 </button>
               </Link>
@@ -850,7 +828,7 @@ const LandingPage = () => {
               </div>
 
               {/* Title */}
-              <h3 className="text-xl md:text-2xl font-bold text-white mb-4 text-center">
+              <h3 className="text-xl md:text-2xl font-semibold text-gray-400 mb-4 text-center">
                 Make Deposit
               </h3>
 
@@ -861,7 +839,7 @@ const LandingPage = () => {
 
               {/* Button */}
               <Link to="/deposit" className="block">
-                <button className="w-full px-6 py-3 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-semibold transition-all duration-300 shadow-lg shadow-teal-500/30 hover:shadow-xl hover:shadow-teal-500/40">
+                <button className="w-full px-4 py-2 sm:px-6 sm:py-3 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-semibold text-xs sm:text-sm transition-all duration-300 shadow-lg shadow-teal-500/30 hover:shadow-xl hover:shadow-teal-500/40">
                   Deposit Now
                 </button>
               </Link>
@@ -888,7 +866,7 @@ const LandingPage = () => {
               </div>
 
               {/* Title */}
-              <h3 className="text-xl md:text-2xl font-bold text-white mb-4 text-center">
+              <h3 className="text-xl md:text-2xl font-semibold text-gray-400 mb-4 text-center">
                 Start Trading
               </h3>
 
@@ -899,7 +877,7 @@ const LandingPage = () => {
 
               {/* Button */}
               <Link to="/trade" className="block">
-                <button className="w-full px-6 py-3 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-semibold transition-all duration-300 shadow-lg shadow-teal-500/30 hover:shadow-xl hover:shadow-teal-500/40">
+                <button className="w-full px-4 py-2 sm:px-6 sm:py-3 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white font-semibold text-xs sm:text-sm transition-all duration-300 shadow-lg shadow-teal-500/30 hover:shadow-xl hover:shadow-teal-500/40">
                   Trade Now
                 </button>
               </Link>
@@ -918,7 +896,7 @@ const LandingPage = () => {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">Why Choose KRAKEN?</h2>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-gray-400 mb-4">Why Choose KRAKEN?</h2>
             <p className="text-lg md:text-xl text-gray-400">Everything you need for professional crypto trading</p>
           </motion.div>
 
@@ -950,13 +928,13 @@ const LandingPage = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">Ready to Start Trading?</h2>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-gray-400 mb-4">Ready to Start Trading?</h2>
             <p className="text-lg md:text-xl text-gray-400 mb-8">Join thousands of traders and start your crypto journey today</p>
             <Link to="/register">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 rounded-lg text-base font-semibold text-white bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 transition-all duration-300 shadow-lg shadow-teal-500/30 hover:shadow-xl hover:shadow-teal-500/40"
+                className="px-5 py-2.5 sm:px-8 sm:py-4 rounded-lg text-xs sm:text-base font-semibold text-white bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 transition-all duration-300 shadow-lg shadow-teal-500/30 hover:shadow-xl hover:shadow-teal-500/40"
               >
                 Create Free Account
               </motion.button>
